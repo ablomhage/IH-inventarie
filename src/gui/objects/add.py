@@ -34,13 +34,12 @@ Created on 12 maj 2011
 
 import wx
 import dbhandler
-import gui.objects.edit as objectedit
 
 ID_LEND  = wx.NewId()
 ID_CHANGEID  = wx.NewId()
 ID_CHANGETYPE = wx.NewId()
 
-class ObjectInfo(wx.Dialog):
+class ObjectAdd(wx.Dialog):
     def __init__(self, parent, id, title, objectID):
         wx.Dialog.__init__(self, parent, id, title, size=(500,300))
         self.__InitUI(objectID)
@@ -55,16 +54,17 @@ class ObjectInfo(wx.Dialog):
         grid = wx.GridBagSizer(hgap=5, vgap=7)
         hSizer = wx.BoxSizer(wx.HORIZONTAL)
 
+        object = dbhandler.ObjectsDB().RetriveObject(objectID)
         
-        print(object)
+        types = dbhandler.ObjectTypesDB().RetriveTypesSorted()
+        owners = dbhandler.OwnerDB().RetriveListOfOwners()
 
         #=======================================================================
         # Object-ID
         #=======================================================================
         textID          = wx.StaticText(self, label="ObjektID: ")
-        self.tcID           = wx.TextCtrl(self, wx.ID_ANY, style=wx.TE_READONLY, size=(150,-1))
-        
-        self.tcID.Enable(False)
+        self.tcID           = wx.TextCtrl(self, wx.ID_ANY, size=(150,-1))
+        self.tcID.SetValue(object[0])
         grid.Add(textID, pos=(0,0))
         grid.Add(self.tcID, pos=(0,1))
         
@@ -72,19 +72,17 @@ class ObjectInfo(wx.Dialog):
         # Type
         #=======================================================================
         textType = wx.StaticText(self, label="Objekttyp: ")
-        self.tcType = wx.TextCtrl(self, wx.ID_ANY, size=(150,-1), style=wx.TE_READONLY)
-        
-        self.tcType.Enable(False)
+        self.cbType = wx.ComboBox(self, -1, choices=types, style=wx.CB_READONLY)
+        self.cbType.SetValue(object[1])
         grid.Add(textType, pos=(0,2))
-        grid.Add(self.tcType, pos=(0,3))
+        grid.Add(self.cbType, pos=(0,3))
         
         #=======================================================================
         # Measurement
         #=======================================================================
         textMeasurement     = wx.StaticText(self, label=u"Mått/antal/sidor: ")
-        self.tcMeasurement  = wx.TextCtrl(self, wx.ID_ANY, size=(150, -1), style=wx.TE_READONLY)
-        
-        self.tcMeasurement.Enable(False)
+        self.tcMeasurement  = wx.TextCtrl(self, wx.ID_ANY, size=(150, -1))
+        self.tcMeasurement.SetValue(object[2])
         grid.Add(textMeasurement, pos=(1,0))
         grid.Add(self.tcMeasurement, pos=(1,1))
         
@@ -92,29 +90,29 @@ class ObjectInfo(wx.Dialog):
         # Nationality
         #=======================================================================
         textNationality     = wx.StaticText(self, label="Nationalitet: ")
-        self.tcNationality  = wx.TextCtrl(self, wx.ID_ANY, size=(150, -1), style=wx.TE_READONLY)
-        
-        self.tcNationality.Enable(False)
+        nationality = dbhandler.NationalityDB().RetriveNationalities()
+        self.cbNationality = wx.ComboBox(self, -1, choices=nationality, style=wx.CB_READONLY)
+        self.cbNationality.SetValue(object[9])
         grid.Add(textNationality, pos=(1,2))
-        grid.Add(self.tcNationality, pos=(1,3))
+        grid.Add(self.cbNationality, pos=(1,3))
         
         #=======================================================================
         # Owner
         #=======================================================================
         textOwner     = wx.StaticText(self, label=u"Ägare: ")
-        self.tcOwner  = wx.TextCtrl(self, wx.ID_ANY, size=(150, -1), style=wx.TE_READONLY)
-        
-        self.tcOwner.Enable(False)
+        self.cbOwner = wx.ComboBox(self, -1, choices=owners, style=wx.CB_READONLY)
+        owner = dbhandler.OwnerDB().RetriveOwner(object[4])
+        self.cbOwner.SetValue(owner)
+
         grid.Add(textOwner, pos=(2,0))
-        grid.Add(self.tcOwner, pos=(2,1))
+        grid.Add(self.cbOwner, pos=(2,1))
         
         #=======================================================================
         # Storage
         #=======================================================================
         textStorage     = wx.StaticText(self, label=u"Förvaringsplats: ")
-        self.tcStorage  = wx.TextCtrl(self, wx.ID_ANY, size=(150, -1), style=wx.TE_READONLY)
-        
-        self.tcStorage.Enable(False)
+        self.tcStorage  = wx.TextCtrl(self, wx.ID_ANY, size=(150, -1))
+        self.tcStorage.SetValue(object[5])
         grid.Add(textStorage, pos=(2,2))
         grid.Add(self.tcStorage, pos=(2,3))
         
@@ -122,31 +120,28 @@ class ObjectInfo(wx.Dialog):
         # Rent
         #=======================================================================
         textRent     = wx.StaticText(self, label="Uthyrningspris: ")
-        self.tcRent  = wx.TextCtrl(self, wx.ID_ANY, size=(150, -1), style=wx.TE_READONLY)
-        
-        
-        self.tcRent.Enable(False)
+        self.tcRent  = wx.TextCtrl(self, wx.ID_ANY, size=(150, -1))
+        self.tcRent.SetValue(str(object[8]))
         grid.Add(textRent, pos=(3,0))
         grid.Add(self.tcRent, pos=(3,1))
         
         #=======================================================================
         # Rented
         #=======================================================================
-        textRented     = wx.StaticText(self, label="Uthyrd till: ")
-        self.tcRented  = wx.TextCtrl(self, wx.ID_ANY, size=(150, -1), style=wx.TE_READONLY)
-        #The renting unit needs to get working.
-        self.tcRented.Enable(False)
-        grid.Add(textRented, pos=(3,2))
-        grid.Add(self.tcRented, pos=(3,3))
+#        textRented     = wx.StaticText(self, label="Uthyrd till: ")
+#        self.tcRented  = wx.TextCtrl(self, wx.ID_ANY, size=(150, -1), style=wx.TE_READONLY)
+#        #Make a special thing here.
+#        self.tcRented.Enable(False)
+#        grid.Add(textRented, pos=(3,2))
+#        grid.Add(self.tcRented, pos=(3,3))
         
         
         #=======================================================================
         # Description
         #=======================================================================
         textDescription = wx.StaticText(self, label=u"Benämning: ")
-        self.tcDescription  = wx.TextCtrl(self, wx.ID_ANY, size=(150, 90), style=wx.TE_MULTILINE | wx.TE_READONLY)
-        
-        self.tcDescription.Enable(False)
+        self.tcDescription  = wx.TextCtrl(self, wx.ID_ANY, size=(150, 90), style=wx.TE_MULTILINE)
+        self.tcDescription.SetValue(object[3])
         grid.Add(textDescription, pos=(4,0))
         grid.Add(self.tcDescription, pos=(4,1))
         
@@ -154,64 +149,63 @@ class ObjectInfo(wx.Dialog):
         # Repairs
         #=======================================================================
         textRepairs = wx.StaticText(self, label="Reparationsbehov: ")
-        self.tcRepairs  = wx.TextCtrl(self, wx.ID_ANY, size=(150, 90), style=wx.TE_MULTILINE | wx.TE_READONLY)
-
-        
-        self.tcRepairs.Enable(False)
+        self.tcRepairs  = wx.TextCtrl(self, wx.ID_ANY, size=(150, 90), style=wx.TE_MULTILINE)
+        self.tcRepairs.SetValue(object[7])
         grid.Add(textRepairs, pos=(4,2))
         grid.Add(self.tcRepairs, pos=(4,3))
 
-        btLend = wx.Button(self, ID_LEND, u"Låna ut")
         btClose = wx.Button(self, wx.ID_CLOSE, u"Stäng")
-        btEdit  = wx.Button(self, wx.ID_EDIT, "Redigera")
+        btSave  = wx.Button(self, wx.ID_SAVE, "Spara")
 
         buttons = wx.BoxSizer(wx.HORIZONTAL)
         
-        buttons.Add(btEdit, wx.ALIGN_LEFT)
-        buttons.Add(btLend, wx.RIGHT)
+        buttons.Add(btSave, wx.RIGHT)
         buttons.Add(btClose, wx.RIGHT)
         
 
 
-
-#        self.Bind(wx.EVT_BUTTON, self.OnSave, id=wx.ID_SAVE)
+        self.Bind(wx.EVT_BUTTON, self.OnSave, id=wx.ID_SAVE)
         self.Bind(wx.EVT_BUTTON, self.OnQuit, id=wx.ID_CLOSE)
-        self.Bind(wx.EVT_BUTTON, self.OnEdit, id=wx.ID_EDIT)
-        self.Bind(wx.EVT_BUTTON, self.OnLoan, id=ID_LEND)
-
-#        border = wx.BoxSizer(wx.VERTICAL)
-#        border.Add(fgs, 1, wx.GROW|wx.ALL, 25)
-#        border.Add(buttons, 0, wx.GROW|wx.BOTTOM, 5)
+        
         hSizer.Add(grid, 0, wx.ALL, 5)
 
         mainSizer.Add(hSizer, 0, wx.ALL, 5)
         mainSizer.Add(buttons, 0, wx.ALIGN_RIGHT)
         self.SetSizerAndFit(mainSizer)
         
-        self.PopulateFrame(objectID)
         
     def OnQuit( self, event ):
         self.Close()
         
-    def OnEdit( self, event, ):
-        dlg = objectedit.ObjectEdit(self, wx.ID_ANY, "Redigera objekt", self.__objectID)
+    def OnSave( self, event ):
+        objectID = self.tcID.GetValue()
+        if(objectID):
+            owner = self.cbOwner.GetValue()
+            myownerdb = dbhandler.OwnerDB()
+            owner = myownerdb.get_owner_id(owner)
+    
+            owner = owner[0]
+    
+            description = self.tcDescription.GetValue()
+            measurement = self.tcMeasurement.GetValue()
+            rent = self.tcRent.GetValue()
+            repairs = self.tcRepairs.GetValue()
+            storage = self.tcStorage.GetValue()
+    
+            nationality = self.cbNationality.GetValue()
+    
+            type = self.cbType.GetValue()
+            
+            mydb = dbhandler.ObjectsDB()
+            mydb.UpdateObject(self.__objectID, (objectID, type, measurement, description, owner, storage, repairs, rent, nationality,))
+            
+            self.Parent.RefreshDialog(objectID)
+            self.Close()
+        else:
+            dlg = wx.MessageDialog(self, u"Objektets identifikationsnummer saknas, vänligen ange detta och försök igen.",
+                              u"ObjektID behövs", wx.OK | wx.ICON_INFORMATION)
+            dlg.ShowModal()
+            dlg.Destroy()
         
-    def OnLoan( self, event ):
-        self.Close() #For now, this will change to something proper.
+        
 
-    def PopulateFrame(self, objectID):
-        object = dbhandler.ObjectsDB().RetriveObject(objectID)
-        self.tcID.SetValue("" + object[0])
-        self.tcType.SetValue(object[1])
-        self.tcMeasurement.SetValue(object[2])
-        self.tcNationality.SetValue(object[9])
-        owner = dbhandler.OwnerDB().RetriveOwner(object[4])
-        self.tcOwner.SetValue(owner)
-        self.tcStorage.SetValue(object[5])
-        self.tcRent.SetValue(str(object[8]))
-        self.tcDescription.SetValue(object[3])
-        self.tcRepairs.SetValue(object[7])
-
-    def RefreshDialog(self, objectID):
-        self.Parent.RefreshList()
-        self.PopulateFrame(objectID)

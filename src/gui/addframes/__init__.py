@@ -24,6 +24,6 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #-------------------------------------------------------------------------------
-__author__="AndreasS"
+__author__="Andreas Blomhage"
 __date__ ="$2011-mar-28 11:01:01$"
 

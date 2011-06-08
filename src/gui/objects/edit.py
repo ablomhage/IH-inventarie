@@ -29,7 +29,7 @@
 '''
 Created on 12 maj 2011
 
-@author: Andreas Sundin <a.blomhage@gmail.com>
+@author: Andreas Blomhage <a.blomhage@gmail.com>
 '''
 
 import wx

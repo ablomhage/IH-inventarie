@@ -26,7 +26,7 @@
 #-------------------------------------------------------------------------------
 # -*- coding: utf-8 -*-
 
-__author__="ablomhage"
+__author__="Andreas Blomhage"
 __date__ ="$2011-mar-12 17:00:00$"
 
 import gui.mainframe

@@ -24,7 +24,7 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #-------------------------------------------------------------------------------
-__author__="Andreas Sundin"
+__author__="Andreas Blomhage"
 __date__ ="$2011-apr-04 09:18:09$"
 
 class MyError(Exception):

@@ -26,7 +26,7 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #-------------------------------------------------------------------------------
 # -*- coding: utf-8 -*-
-__author__="Andreas Sundin"
+__author__="Andreas Blomhage"
 __date__ ="$2011-mar-28 10:45:03$"
 
 import dbhandler

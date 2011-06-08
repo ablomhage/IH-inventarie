@@ -29,7 +29,7 @@
 
 #TODO: Add license header
 
-__author__="ablomhage"
+__author__="Andreas Blomhage"
 __date__ ="$2011-mar-19 21:29:10$"
 
 import sqlite3

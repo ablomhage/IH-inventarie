@@ -25,7 +25,7 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #-------------------------------------------------------------------------------
 # -*- coding: utf-8 -*-
-__author__="Andreas"
+__author__="Andreas Blomhage"
 __date__ ="$2011-mar-17 11:31:23$"
 
 from setuptools import setup,find_packages

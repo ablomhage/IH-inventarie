@@ -29,7 +29,7 @@
 '''
 Created on 10 maj 2011
 
-@author: ablomhage
+@author: Andreas Blomhage
 '''
 
 import wx
