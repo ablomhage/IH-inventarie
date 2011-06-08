@@ -27,43 +27,34 @@
 #-------------------------------------------------------------------------------
 # -*- coding: utf-8 -*-
 __author__="Andreas Blomhage"
-__date__ ="$2011-mar-28 10:47:23$"
+__date__ ="$2011-mar-28 11:24:45$"
 
 import dbhandler
-import addpersonbase
-import wx
+#import addtest
+import gui.templates.addperson as addperson
+import exception
+import logging
 
-class AddOwnerDialog(addpersonbase.AddBase):
+logging.basicConfig(level=logging.INFO)
+log = logging.getLogger('ih_example')
+
+class AddLoanerDialog(addperson.AddTemplate):
     def __init__(self, parent, id, title):
-        addpersonbase.AddBase.__init__(self, parent, id, title)
+        addperson.AddTemplate.__init__(self, parent, id, title)
 
     def OnSave(self, event):
-        company = self.tc_company.GetValue()
-        contact = self.tc_contact.GetValue()
-        if(company or contact):
-            address = self.tc_address.GetValue()
-            postal     = self.tc_postal.GetValue()
-            town    = self.tc_town.GetValue()
-            phone   = self.tc_phone.GetValue()
-            mobile  = self.tc_mobile.GetValue()
-            email   = self.tc_email.GetValue()
-            insert = (company, contact, address, postal, town, phone, mobile, email)
+        try:
+            if(not addperson.AddTemplate.OnSave(self, event)):
+                print "Trying"
+        except ValueError, e:
+            log.info('Missing contact')
+        else:
+            print "No exception"
+            insert = super(AddLoanerDialog, self).return_values()
+            print insert
 
-            mydb = dbhandler.OwnerDB()
-
+            mydb = dbhandler.LoanerDB()
             mydb.insert_into_table(insert)
 
-            self.tc_company.Clear()
-            self.tc_contact.Clear()
-            self.tc_address.Clear()
-            self.tc_postal.Clear()
-            self.tc_town.Clear()
-            self.tc_phone.Clear()
-            self.tc_mobile.Clear()
-            self.tc_email.Clear()
-        else:
-            dlg = wx.MessageDialog(self, u"Företagets, föreningens eller privatpersonens namn saknas, vänligen åtgärda detta.",
-                              "Namn saknas", wx.OK | wx.ICON_INFORMATION)
-            dlg.ShowModal()
-            dlg.Destroy()
-# End of class AddOwnerDialog
+
+# End of class AddLoanerDialog

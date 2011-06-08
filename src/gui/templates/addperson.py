@@ -190,5 +190,22 @@ class AddTemplate( wx.Frame ):
     def OnQuit( self, event ):
         self.Close()
 
+    def return_values(self):
+        company = self.tc_company.GetValue()
+        contact = self.tc_contact.GetValue()
+        address = self.tc_address.GetValue()
+        postal  = self.tc_postal.GetValue()
+        town    = self.tc_town.GetValue()
+        phone   = self.tc_phone.GetValue()
+        mobile  = self.tc_mobile.GetValue()
+        email   = self.tc_email.GetValue()
+        insert = (company, contact, address, postal, town, phone, mobile, email)
+        return insert
+
+    def OnSave(self, event):
+        #Doesn't seem to work to raise an exception in the validator, so we need to do it like this instead.
+        if(not self.Validate()):
+            raise ValueError("Missing contact")
+
 # End of class AddBase
 

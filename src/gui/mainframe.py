@@ -34,11 +34,12 @@ import wx
 import wx.lib.agw.flatnotebook as fnb
 import gui.addframes.addobjectdialog
 #import gui.addframes.addownerdialog
-import gui.addframes.addloanerdialog
+#import gui.addframes.addloanerdialog
 import gui.objects.list as objectslist
 import gui.owners.list as ownerslist
 import gui.owners.add as ownersadd
 import gui.loaners.list as loanerslist
+import gui.loaners.add as loanersadd
 import gui.types.list as typelist
 
 
@@ -170,7 +171,7 @@ class MainFrame(wx.Frame):
 #        dlg = gui.addframes.addownerdialog.AddOwnerDialog(self, -1, u"Lägg till ägare")
 
     def OnAddLoaner(self, event):
-        dlg = gui.addframes.addloanerdialog.AddLoanerDialog(self, -1, u"Lägg till låntagare")
+        dlg = loanersadd.AddLoanerDialog(self, -1, u"Lägg till låntagare")
 
     def OnAddType(self, event):
         dlg = wx.TextEntryDialog(self, 'Enter some text',u'Lägg till typ')
