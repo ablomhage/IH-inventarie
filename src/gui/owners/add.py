@@ -30,12 +30,12 @@ __author__="Andreas Blomhage"
 __date__ ="$2011-mar-28 10:47:23$"
 
 import dbhandler
-import addpersonbase
+import gui.templates.addperson as addperson
 import wx
 
-class AddOwnerDialog(addpersonbase.AddBase):
+class AddOwnerDialog(addperson.AddTemplate):
     def __init__(self, parent, id, title):
-        addpersonbase.AddBase.__init__(self, parent, id, title)
+        addperson.AddTemplate.__init__(self, parent, id, title)
 
     def OnSave(self, event):
         company = self.tc_company.GetValue()

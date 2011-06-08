@@ -105,7 +105,7 @@ class ValidatePhone( wx.PyValidator ):
 
 # End of class ValidatePhone
 
-class AddBase( wx.Frame ):
+class AddTemplate( wx.Frame ):
     savedata = ()
     def __init__( self, parent, id, title ):
         wx.Frame.__init__( self, parent, id, title, size = ( 400, 400 ),
