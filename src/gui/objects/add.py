@@ -40,22 +40,19 @@ ID_CHANGEID  = wx.NewId()
 ID_CHANGETYPE = wx.NewId()
 
 class ObjectAdd(wx.Dialog):
-    def __init__(self, parent, id, title, objectID):
+    def __init__(self, parent, id, title):
         wx.Dialog.__init__(self, parent, id, title, size=(500,300))
-        self.__InitUI(objectID)
+        self.__InitUI()
         self.Centre()
         self.Show()
 
-    def __InitUI(self, objectID):
+    def __InitUI(self):
         self.SetExtraStyle(wx.WS_EX_VALIDATE_RECURSIVELY)
-        self.__objectID = objectID
         # create some sizers
         mainSizer = wx.BoxSizer(wx.VERTICAL)
         grid = wx.GridBagSizer(hgap=5, vgap=7)
         hSizer = wx.BoxSizer(wx.HORIZONTAL)
 
-        object = dbhandler.ObjectsDB().RetriveObject(objectID)
-        
         types = dbhandler.ObjectTypesDB().RetriveTypesSorted()
         owners = dbhandler.OwnerDB().RetriveListOfOwners()
 
@@ -64,7 +61,6 @@ class ObjectAdd(wx.Dialog):
         #=======================================================================
         textID          = wx.StaticText(self, label="ObjektID: ")
         self.tcID           = wx.TextCtrl(self, wx.ID_ANY, size=(150,-1))
-        self.tcID.SetValue(object[0])
         grid.Add(textID, pos=(0,0))
         grid.Add(self.tcID, pos=(0,1))
         
@@ -73,7 +69,7 @@ class ObjectAdd(wx.Dialog):
         #=======================================================================
         textType = wx.StaticText(self, label="Objekttyp: ")
         self.cbType = wx.ComboBox(self, -1, choices=types, style=wx.CB_READONLY)
-        self.cbType.SetValue(object[1])
+
         grid.Add(textType, pos=(0,2))
         grid.Add(self.cbType, pos=(0,3))
         
@@ -82,7 +78,7 @@ class ObjectAdd(wx.Dialog):
         #=======================================================================
         textMeasurement     = wx.StaticText(self, label=u"Mått/antal/sidor: ")
         self.tcMeasurement  = wx.TextCtrl(self, wx.ID_ANY, size=(150, -1))
-        self.tcMeasurement.SetValue(object[2])
+
         grid.Add(textMeasurement, pos=(1,0))
         grid.Add(self.tcMeasurement, pos=(1,1))
         
@@ -92,7 +88,7 @@ class ObjectAdd(wx.Dialog):
         textNationality     = wx.StaticText(self, label="Nationalitet: ")
         nationality = dbhandler.NationalityDB().RetriveNationalities()
         self.cbNationality = wx.ComboBox(self, -1, choices=nationality, style=wx.CB_READONLY)
-        self.cbNationality.SetValue(object[9])
+
         grid.Add(textNationality, pos=(1,2))
         grid.Add(self.cbNationality, pos=(1,3))
         
@@ -101,9 +97,7 @@ class ObjectAdd(wx.Dialog):
         #=======================================================================
         textOwner     = wx.StaticText(self, label=u"Ägare: ")
         self.cbOwner = wx.ComboBox(self, -1, choices=owners, style=wx.CB_READONLY)
-        owner = dbhandler.OwnerDB().RetriveOwner(object[4])
-        self.cbOwner.SetValue(owner)
-
+        
         grid.Add(textOwner, pos=(2,0))
         grid.Add(self.cbOwner, pos=(2,1))
         
@@ -112,7 +106,7 @@ class ObjectAdd(wx.Dialog):
         #=======================================================================
         textStorage     = wx.StaticText(self, label=u"Förvaringsplats: ")
         self.tcStorage  = wx.TextCtrl(self, wx.ID_ANY, size=(150, -1))
-        self.tcStorage.SetValue(object[5])
+
         grid.Add(textStorage, pos=(2,2))
         grid.Add(self.tcStorage, pos=(2,3))
         
@@ -121,7 +115,7 @@ class ObjectAdd(wx.Dialog):
         #=======================================================================
         textRent     = wx.StaticText(self, label="Uthyrningspris: ")
         self.tcRent  = wx.TextCtrl(self, wx.ID_ANY, size=(150, -1))
-        self.tcRent.SetValue(str(object[8]))
+
         grid.Add(textRent, pos=(3,0))
         grid.Add(self.tcRent, pos=(3,1))
         
@@ -141,7 +135,7 @@ class ObjectAdd(wx.Dialog):
         #=======================================================================
         textDescription = wx.StaticText(self, label=u"Benämning: ")
         self.tcDescription  = wx.TextCtrl(self, wx.ID_ANY, size=(150, 90), style=wx.TE_MULTILINE)
-        self.tcDescription.SetValue(object[3])
+
         grid.Add(textDescription, pos=(4,0))
         grid.Add(self.tcDescription, pos=(4,1))
         
@@ -150,7 +144,7 @@ class ObjectAdd(wx.Dialog):
         #=======================================================================
         textRepairs = wx.StaticText(self, label="Reparationsbehov: ")
         self.tcRepairs  = wx.TextCtrl(self, wx.ID_ANY, size=(150, 90), style=wx.TE_MULTILINE)
-        self.tcRepairs.SetValue(object[7])
+
         grid.Add(textRepairs, pos=(4,2))
         grid.Add(self.tcRepairs, pos=(4,3))
 
@@ -181,26 +175,41 @@ class ObjectAdd(wx.Dialog):
         objectID = self.tcID.GetValue()
         if(objectID):
             owner = self.cbOwner.GetValue()
-            myownerdb = dbhandler.OwnerDB()
-            owner = myownerdb.get_owner_id(owner)
-    
-            owner = owner[0]
-    
-            description = self.tcDescription.GetValue()
-            measurement = self.tcMeasurement.GetValue()
-            rent = self.tcRent.GetValue()
-            repairs = self.tcRepairs.GetValue()
-            storage = self.tcStorage.GetValue()
-    
-            nationality = self.cbNationality.GetValue()
-    
-            type = self.cbType.GetValue()
-            
-            mydb = dbhandler.ObjectsDB()
-            mydb.UpdateObject(self.__objectID, (objectID, type, measurement, description, owner, storage, repairs, rent, nationality,))
-            
-            self.Parent.RefreshDialog(objectID)
-            self.Close()
+            if(owner):
+                myownerdb = dbhandler.OwnerDB()
+                owner = myownerdb.get_owner_id(owner)
+        
+                owner = owner[0]
+        
+                description = self.tcDescription.GetValue()
+                measurement = self.tcMeasurement.GetValue()
+                rent = self.tcRent.GetValue()
+                repairs = self.tcRepairs.GetValue()
+                storage = self.tcStorage.GetValue()
+        
+                nationality = self.cbNationality.GetValue()
+        
+                type = self.cbType.GetValue()
+                
+                mydb = dbhandler.ObjectsDB()
+                mydb.insert_into_table((objectID, type, measurement, description, owner, storage, 0, repairs, rent, nationality,))
+                
+
+                self.tcID.Clear()
+                self.tcDescription.Clear()
+                self.tcMeasurement.Clear()
+                self.tcRent.Clear()
+                self.tcRepairs.Clear()
+                self.tcStorage.Clear()
+
+                self.cbNationality.Clear()
+                self.cbOwner.Clear()
+                self.cbType.Clear()
+            else:
+                dlg = wx.MessageDialog(self, u"En ägare av objektet måste anges innan en sparning kan ske. Vänligen ange en och försök igen.",
+                              u"ägare saknas", wx.OK | wx.ICON_INFORMATION)
+                dlg.ShowModal()
+                dlg.Destroy()
         else:
             dlg = wx.MessageDialog(self, u"Objektets identifikationsnummer saknas, vänligen ange detta och försök igen.",
                               u"ObjektID behövs", wx.OK | wx.ICON_INFORMATION)

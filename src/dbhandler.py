@@ -25,9 +25,6 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #-------------------------------------------------------------------------------
-# -*- coding: utf-8 -*-
-
-#TODO: Add license header
 
 __author__="Andreas Blomhage"
 __date__ ="$2011-mar-19 21:29:10$"

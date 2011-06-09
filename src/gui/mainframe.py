@@ -36,6 +36,7 @@ import gui.addframes.addobjectdialog
 #import gui.addframes.addownerdialog
 #import gui.addframes.addloanerdialog
 import gui.objects.list as objectslist
+import gui.objects.add as objectsadd
 import gui.owners.list as ownerslist
 import gui.owners.add as ownersadd
 import gui.loaners.list as loanerslist
@@ -164,7 +165,8 @@ class MainFrame(wx.Frame):
 
 
     def OnAddObject(self, event):
-        dlg = gui.addframes.addobjectdialog.AddObjectDialog(self, -1, u"Lägg till ett objekt")
+        dlg = objectsadd.ObjectAdd(self, -1, u"Lägg till ett objekt")
+#        dlg = gui.addframes.addobjectdialog.AddObjectDialog(self, -1, u"Lägg till ett objekt")
 
     def OnAddOwner(self, event):
         dlg = ownersadd.AddOwnerDialog(self, -1, u"Lägg till ägare")
