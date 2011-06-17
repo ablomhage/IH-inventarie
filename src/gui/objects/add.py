@@ -35,9 +35,7 @@ Created on 12 maj 2011
 import wx
 import dbhandler
 
-ID_LEND  = wx.NewId()
-ID_CHANGEID  = wx.NewId()
-ID_CHANGETYPE = wx.NewId()
+ID_AVAILABILITY = wx.NewId()
 
 class ObjectAdd(wx.Dialog):
     def __init__(self, parent, id, title):
@@ -68,7 +66,7 @@ class ObjectAdd(wx.Dialog):
         # Type
         #=======================================================================
         textType = wx.StaticText(self, label="Objekttyp: ")
-        self.cbType = wx.ComboBox(self, -1, choices=types, style=wx.CB_READONLY)
+        self.cbType = wx.ComboBox(self, -1, choices=types, style=wx.CB_READONLY, size=(150,-1))
 
         grid.Add(textType, pos=(0,2))
         grid.Add(self.cbType, pos=(0,3))
@@ -87,7 +85,7 @@ class ObjectAdd(wx.Dialog):
         #=======================================================================
         textNationality     = wx.StaticText(self, label="Nationalitet: ")
         nationality = dbhandler.NationalityDB().RetriveNationalities()
-        self.cbNationality = wx.ComboBox(self, -1, choices=nationality, style=wx.CB_READONLY)
+        self.cbNationality = wx.ComboBox(self, -1, choices=nationality, style=wx.CB_READONLY, size=(150, -1))
 
         grid.Add(textNationality, pos=(1,2))
         grid.Add(self.cbNationality, pos=(1,3))
@@ -96,7 +94,7 @@ class ObjectAdd(wx.Dialog):
         # Owner
         #=======================================================================
         textOwner     = wx.StaticText(self, label=u"Ägare: ")
-        self.cbOwner = wx.ComboBox(self, -1, choices=owners, style=wx.CB_READONLY)
+        self.cbOwner = wx.ComboBox(self, -1, choices=owners, style=wx.CB_READONLY, size=(150,-1))
         
         grid.Add(textOwner, pos=(2,0))
         grid.Add(self.cbOwner, pos=(2,1))
@@ -111,14 +109,42 @@ class ObjectAdd(wx.Dialog):
         grid.Add(self.tcStorage, pos=(2,3))
         
         #=======================================================================
-        # Rent
+        # Availability
         #=======================================================================
-        textRent     = wx.StaticText(self, label="Uthyrningspris: ")
-        self.tcRent  = wx.TextCtrl(self, wx.ID_ANY, size=(150, -1))
-
-        grid.Add(textRent, pos=(3,0))
-        grid.Add(self.tcRent, pos=(3,1))
+        textAvailability   = wx.StaticText(self, label="Tillgänglighet: ")
+        availability = dbhandler.AvailabilityDB().RetriveAvailability()
+#        self.cbAvailability = wx.ComboBox(self, -1, choices=availability, style=wx.CB_READONLY, size=(150, -1))
+        self.cbAvailability = wx.ComboBox(self, -1, choices=availability, style=wx.CB_READONLY, size=(150, -1))
         
+        grid.Add(textAvailability, pos=(3,0))
+        grid.Add(self.cbAvailability, pos=(3,1))
+        
+        #=======================================================================
+        # Price
+        #=======================================================================
+                
+        self._pricePanel = wx.Panel(self, -1)
+        
+        textPrice     = wx.StaticText(self, label="Pris: ")
+        self.tcPrice  = wx.TextCtrl(self, wx.ID_ANY, size=(150, -1))
+
+#        hbox = wx.BoxSizer(wx.HORIZONTAL)
+#        priceSizer = wx.BoxSizer(wx.HORIZONTAL)
+#        hbox.Add(textPrice, 0, wx.ALIGN_CENTER)
+#        priceSizer.Add(hbox, 1, wx.ALIGN_CENTER)
+#        hbox = wx.BoxSizer(wx.HORIZONTAL)
+#        hbox.Add(tcPrice, 0, wx.ALIGN_CENTER)
+#        priceSizer.Add(hbox, 1, wx.ALIGN_CENTER)
+#        self._pricePanel.SetSizer(priceSizer)
+#        self._pricePanel.SetAutoLayout(True)
+        grid.Add(textPrice, pos=(3,2))
+        grid.Add(self.tcPrice, pos=(3,3))
+        
+        self.tcPrice.Disable()
+#        grid.Add(self._pricePanel, pos=(3,2))
+#        
+#        self._pricePanel.Hide()
+       
         #=======================================================================
         # Rented
         #=======================================================================
@@ -160,6 +186,7 @@ class ObjectAdd(wx.Dialog):
 
         self.Bind(wx.EVT_BUTTON, self.OnSave, id=wx.ID_SAVE)
         self.Bind(wx.EVT_BUTTON, self.OnQuit, id=wx.ID_CLOSE)
+        self.cbAvailability.Bind(wx.EVT_COMBOBOX, self.OnChange)
         
         hSizer.Add(grid, 0, wx.ALL, 5)
 
@@ -183,28 +210,40 @@ class ObjectAdd(wx.Dialog):
         
                 description = self.tcDescription.GetValue()
                 measurement = self.tcMeasurement.GetValue()
-                rent = self.tcRent.GetValue()
+                rent = self.tcPrice.GetValue()
                 repairs = self.tcRepairs.GetValue()
                 storage = self.tcStorage.GetValue()
         
                 nationality = self.cbNationality.GetValue()
-        
+                availability = self.cbAvailability.GetSelection()
                 type = self.cbType.GetValue()
                 
                 mydb = dbhandler.ObjectsDB()
-                mydb.insert_into_table((objectID, type, measurement, description, owner, storage, 0, repairs, rent, nationality,))
+                try:
+                    mydb.insert_into_table((objectID, type, measurement, description, owner, storage, availability, repairs, rent, nationality,))
                 
+                    self.tcID.Clear()
+                    self.tcDescription.Clear()
+                    self.tcMeasurement.Clear()
+                    self.tcPrice.Clear()
+                    self.tcPrice.Disable()
+                    self.tcRepairs.Clear()
+                    self.tcStorage.Clear()
 
-                self.tcID.Clear()
-                self.tcDescription.Clear()
-                self.tcMeasurement.Clear()
-                self.tcRent.Clear()
-                self.tcRepairs.Clear()
-                self.tcStorage.Clear()
-
-                self.cbNationality.Clear()
-                self.cbOwner.Clear()
-                self.cbType.Clear()
+                    self.cbAvailability.SetSelection(-1)
+                    self.cbOwner.SetSelection(-1)
+                    self.cbNationality.SetSelection(-1)
+                    self.cbType.SetSelection(-1)
+#                    self.cbNationality.Clear()
+#                    self.cbOwner.Clear()
+#                    self.cbType.Clear()
+#                    self.cbAvailability.Clear()
+                    
+                except:
+                    dlg = wx.MessageDialog(self, u"Detta ID-nummer finns redan. Vänligen ange ett nytt och försök igen.",
+                              u"Dublett funnen", wx.OK | wx.ICON_INFORMATION)
+                    dlg.ShowModal()
+                    dlg.Destroy()
             else:
                 dlg = wx.MessageDialog(self, u"En ägare av objektet måste anges innan en sparning kan ske. Vänligen ange en och försök igen.",
                               u"ägare saknas", wx.OK | wx.ICON_INFORMATION)
@@ -217,4 +256,13 @@ class ObjectAdd(wx.Dialog):
             dlg.Destroy()
         
         
-
+    def OnChange(self, event):
+        item = event.GetSelection()
+        print("Yes, change registered %s was selected" % (item))
+        if(item == 1) or (item == 2):
+            self.tcPrice.Enable()
+        else:
+            self.tcPrice.Clear()
+            self.tcPrice.Disable()
+            
+        

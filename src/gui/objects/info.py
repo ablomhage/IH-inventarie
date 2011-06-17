@@ -40,6 +40,7 @@ ID_LEND  = wx.NewId()
 ID_CHANGEID  = wx.NewId()
 ID_CHANGETYPE = wx.NewId()
 
+#TODO: Add classdocumentation
 class ObjectInfo(wx.Dialog):
     def __init__(self, parent, id, title, objectID):
         wx.Dialog.__init__(self, parent, id, title, size=(500,300))
@@ -122,12 +123,12 @@ class ObjectInfo(wx.Dialog):
         # Rent
         #=======================================================================
         textRent     = wx.StaticText(self, label="Uthyrningspris: ")
-        self.tcRent  = wx.TextCtrl(self, wx.ID_ANY, size=(150, -1), style=wx.TE_READONLY)
+        self.tcPrice = wx.TextCtrl(self, wx.ID_ANY, size=(150, -1), style=wx.TE_READONLY)
         
         
-        self.tcRent.Enable(False)
+        self.tcPrice.Enable(False)
         grid.Add(textRent, pos=(3,0))
-        grid.Add(self.tcRent, pos=(3,1))
+        grid.Add(self.tcPrice, pos=(3,1))
         
         #=======================================================================
         # Rented
@@ -163,7 +164,7 @@ class ObjectInfo(wx.Dialog):
 
         btLend = wx.Button(self, ID_LEND, u"Låna ut")
         btClose = wx.Button(self, wx.ID_CLOSE, u"Stäng")
-        btEdit  = wx.Button(self, wx.ID_EDIT, "Redigera")
+        btEdit  = wx.Button(self, wx.ID_EDIT, u"Redigera")
 
         buttons = wx.BoxSizer(wx.HORIZONTAL)
         
@@ -194,10 +195,10 @@ class ObjectInfo(wx.Dialog):
         self.Close()
         
     def OnEdit( self, event, ):
-        dlg = objectedit.ObjectEdit(self, wx.ID_ANY, "Redigera objekt", self.__objectID)
+        dlg = objectedit.ObjectEdit(self, wx.ID_ANY, u"Redigera objekt", self.__objectID)
         
     def OnLoan( self, event ):
-        self.Close() #For now, this will change to something proper.
+        pass #FIXME: Add functionality here.
 
     def PopulateFrame(self, objectID):
         object = dbhandler.ObjectsDB().RetriveObject(objectID)
@@ -208,7 +209,7 @@ class ObjectInfo(wx.Dialog):
         owner = dbhandler.OwnerDB().RetriveOwner(object[4])
         self.tcOwner.SetValue(owner)
         self.tcStorage.SetValue(object[5])
-        self.tcRent.SetValue(str(object[8]))
+        self.tcPrice.SetValue(str(object[8]))
         self.tcDescription.SetValue(object[3])
         self.tcRepairs.SetValue(object[7])
 

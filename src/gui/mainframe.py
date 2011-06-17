@@ -32,7 +32,7 @@ __date__ ="$2011-mar-28 11:01:51$"
 import dbhandler
 import wx
 import wx.lib.agw.flatnotebook as fnb
-import gui.addframes.addobjectdialog
+#import gui.addframes.addobjectdialog
 #import gui.addframes.addownerdialog
 #import gui.addframes.addloanerdialog
 import gui.objects.list as objectslist

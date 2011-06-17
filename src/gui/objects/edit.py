@@ -72,7 +72,7 @@ class ObjectEdit(wx.Dialog):
         # Type
         #=======================================================================
         textType = wx.StaticText(self, label="Objekttyp: ")
-        self.cbType = wx.ComboBox(self, -1, choices=types, style=wx.CB_READONLY)
+        self.cbType = wx.ComboBox(self, -1, choices=types, style=wx.CB_READONLY, size=(150,-1))
         self.cbType.SetValue(object[1])
         grid.Add(textType, pos=(0,2))
         grid.Add(self.cbType, pos=(0,3))
@@ -91,7 +91,7 @@ class ObjectEdit(wx.Dialog):
         #=======================================================================
         textNationality     = wx.StaticText(self, label="Nationalitet: ")
         nationality = dbhandler.NationalityDB().RetriveNationalities()
-        self.cbNationality = wx.ComboBox(self, -1, choices=nationality, style=wx.CB_READONLY)
+        self.cbNationality = wx.ComboBox(self, -1, choices=nationality, style=wx.CB_READONLY, size=(150,-1))
         self.cbNationality.SetValue(object[9])
         grid.Add(textNationality, pos=(1,2))
         grid.Add(self.cbNationality, pos=(1,3))
@@ -100,7 +100,7 @@ class ObjectEdit(wx.Dialog):
         # Owner
         #=======================================================================
         textOwner     = wx.StaticText(self, label=u"Ägare: ")
-        self.cbOwner = wx.ComboBox(self, -1, choices=owners, style=wx.CB_READONLY)
+        self.cbOwner = wx.ComboBox(self, -1, choices=owners, style=wx.CB_READONLY, size=(150,-1))
         owner = dbhandler.OwnerDB().RetriveOwner(object[4])
         self.cbOwner.SetValue(owner)
 
@@ -120,10 +120,10 @@ class ObjectEdit(wx.Dialog):
         # Rent
         #=======================================================================
         textRent     = wx.StaticText(self, label="Uthyrningspris: ")
-        self.tcRent  = wx.TextCtrl(self, wx.ID_ANY, size=(150, -1))
-        self.tcRent.SetValue(str(object[8]))
+        self.tcPrice = wx.TextCtrl(self, wx.ID_ANY, size=(150, -1))
+        self.tcPrice.SetValue(str(object[8]))
         grid.Add(textRent, pos=(3,0))
-        grid.Add(self.tcRent, pos=(3,1))
+        grid.Add(self.tcPrice, pos=(3,1))
         
         #=======================================================================
         # Rented
@@ -188,7 +188,7 @@ class ObjectEdit(wx.Dialog):
     
             description = self.tcDescription.GetValue()
             measurement = self.tcMeasurement.GetValue()
-            rent = self.tcRent.GetValue()
+            rent = self.tcPrice.GetValue()
             repairs = self.tcRepairs.GetValue()
             storage = self.tcStorage.GetValue()
     

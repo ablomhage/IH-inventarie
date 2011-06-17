@@ -48,16 +48,16 @@ class DBBase(object):
         except sqlite3.Error, error:
             print( str(error))
 
-#TODO: Make it a option for the user instead, only using My Documents as a default
     def get_dbpath(self):
-        mydb = os.path.expanduser("~\My Documents")
-        if os.path.isdir(mydb):
-            mydb = mydb +r'\interaktiv_historia.db'
-            return mydb
-        else:
-            mydb = os.path.expanduser("~")
-            mydb = mydb + r'\interaktiv_historia.db'
-            return mydb
+        
+        dir = os.environ['APPDATA'] 
+        dir = dir + r'\IH Inventarie'
+        #This should be done at the installation of the software.
+        if not os.path.isdir(dir):
+            os.makedirs(dir)
+        
+        mydb = dir + r'\interaktiv_historia.db'
+        return mydb
 
     def insert_into_table(self, sql, data):
         con = sqlite3.connect(self.get_dbpath())
@@ -102,16 +102,22 @@ class ObjectsDB(DBBase):
         DBBase.__init__(self)
         DBBase.create_table(self, "objects(objectid text unique, type text, "+
             "measurment text, description text, owner integer, storage text, "+
-            "repairs bool, repairneeds text, rent integer, nationality text)")
+            "availability integer, repairneeds text, rent integer, nationality text)")
 
     def insert_into_table(self, data):
         sql = "objects values (?,?,?,?,?,?,?,?,?,?)"
-        DBBase.insert_into_table(self, sql, data)
+        try:
+            DBBase.insert_into_table(self, sql, data)
+        except sqlite3.IntegrityError:
+            raise Exception('unique') #Not sure I like this solution. But do not want to import sqlite3 into the gui-module.
 
     def UpdateObject(self, objectID, data):
         sql = "objects set objectid=?, type=?, measurment=?, description=?, owner=?, storage=?, repairneeds=?, rent=?, nationality=? where objectid = " + objectID
 
-        DBBase.UpdateTable(self, sql, data)
+        try:
+            DBBase.UpdateTable(self, sql, data)
+        except sqlite3.IntegrityError:
+            raise Exception('unique') #Not sure I like this solution. But do not want to import sqlite3 into the gui-module
     
     def RetriveObject(self, objectID):
         object = DBBase.search_in_table(self, "* from objects where objectid=?", (objectID, ))
@@ -261,3 +267,14 @@ class NationalityDB():
         
     def RetriveNationalities(self):
         return self.__nationalityList
+
+# End of class NationalityDB
+
+class AvailabilityDB():
+    def __init__(self):
+        self._availabilityList = ["","Till salu", "Uthyres"]
+
+    def RetriveAvailability(self):
+        return self._availabilityList
+    
+# End of class AvailabilityDB
