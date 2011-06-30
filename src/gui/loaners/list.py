@@ -25,7 +25,7 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #-------------------------------------------------------------------------------
-# -*- coding: UTF-8 -*-
+
 '''
 Created on 10 maj 2011
 
@@ -75,7 +75,7 @@ class LoanersList(wx.Panel, listmix.ColumnSorterMixin):
                                  style=wx.LC_REPORT 
                                  #| wx.BORDER_SUNKEN
                                  | wx.BORDER_NONE
-                                 | wx.LC_EDIT_LABELS
+#                                 | wx.LC_EDIT_LABELS
                                  | wx.LC_SORT_ASCENDING
                                  #| wx.LC_NO_HEADER
                                  #| wx.LC_VRULES

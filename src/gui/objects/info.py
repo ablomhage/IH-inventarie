@@ -195,7 +195,11 @@ class ObjectInfo(wx.Dialog):
         self.Close()
         
     def OnEdit( self, event, ):
-        dlg = objectedit.ObjectEdit(self, wx.ID_ANY, u"Redigera objekt", self.__objectID)
+        dlg = objectedit.ObjectEdit(self, wx.ID_ANY, u"Redigera objekt")
+        object = list(dbhandler.ObjectsDB().RetriveObject(self.__objectID))
+        object[4] = dbhandler.OwnerDB().RetriveOwner(object[4])
+        print object
+        dlg.PopulateFrame(tuple(object))
         
     def OnLoan( self, event ):
         pass #FIXME: Add functionality here.

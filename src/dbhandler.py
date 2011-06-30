@@ -32,6 +32,10 @@ __date__ ="$2011-mar-19 21:29:10$"
 import sqlite3
 import os
 
+class IntegrityError(sqlite3.IntegrityError):
+    "Used to indicate a integrity error within the database."
+
+#TODO: Add classdocumentation
 class DBBase(object):
     def __init__(self):
         """init"""
@@ -63,7 +67,12 @@ class DBBase(object):
         con = sqlite3.connect(self.get_dbpath())
         cur = con.cursor()
         sql = "insert into " + sql
-        cur.execute(sql, data)
+        try: 
+            cur.execute(sql, data)
+        except sqlite3.IntegrityError, e:
+            print type(e)
+            print e
+            raise IntegrityError('Key already exists')
         con.commit()
         cur.close()
         con.close()
@@ -97,19 +106,17 @@ class DBBase(object):
 
 # End of class DBBase
 
+#TODO: Add classdocumentation
 class ObjectsDB(DBBase):
     def __init__(self):
         DBBase.__init__(self)
-        DBBase.create_table(self, "objects(objectid text unique, type text, "+
-            "measurment text, description text, owner integer, storage text, "+
+        DBBase.create_table(self, "objects(objectid text unique not null, type text, "+
+            "measurment text, description text, owner integer not null, storage text, "+
             "availability integer, repairneeds text, rent integer, nationality text)")
 
-    def insert_into_table(self, data):
+    def InsertObject(self, data):
         sql = "objects values (?,?,?,?,?,?,?,?,?,?)"
-        try:
-            DBBase.insert_into_table(self, sql, data)
-        except sqlite3.IntegrityError:
-            raise Exception('unique') #Not sure I like this solution. But do not want to import sqlite3 into the gui-module.
+        DBBase.insert_into_table(self, sql, data)
 
     def UpdateObject(self, objectID, data):
         sql = "objects set objectid=?, type=?, measurment=?, description=?, owner=?, storage=?, repairneeds=?, rent=?, nationality=? where objectid = " + objectID
@@ -117,7 +124,7 @@ class ObjectsDB(DBBase):
         try:
             DBBase.UpdateTable(self, sql, data)
         except sqlite3.IntegrityError:
-            raise Exception('unique') #Not sure I like this solution. But do not want to import sqlite3 into the gui-module
+            raise IntegrityError('Key already exists')
     
     def RetriveObject(self, objectID):
         object = DBBase.search_in_table(self, "* from objects where objectid=?", (objectID, ))
@@ -137,6 +144,7 @@ class ObjectsDB(DBBase):
         return list 
 # End of class ObjectsDB
 
+#TODO: Add classdocumentation
 class OwnerDB(DBBase):
     __tablename = ""
     def __init__(self):
@@ -153,23 +161,23 @@ class OwnerDB(DBBase):
         except sqlite3.Error, error:
             print error
 
-    def get_owner_id(self, owner):
+    def RetriveOwnerID(self, owner):
         ownerlist = owner.split(', ')
         try:
             list = DBBase.search_in_table(self, "rowid from " +
                 self.__tablename + " where contact=? and address=?",(ownerlist[0],ownerlist[1],))
 
             try:
-                return list[0]
+                return list[0][0]
             except:
-                return -1
+                return None
         except:
             list = DBBase.search_in_table(self, "rowid from " +
                 self.__tablename + " where company=?",(ownerlist[0],))
             try:
-                return list[0]
+                return list[0][0]
             except:
-                return -1
+                return None
 
     def RetriveOwner(self, ownerID):
         try:
@@ -212,6 +220,7 @@ class OwnerDB(DBBase):
         return list 
 # End of class LoanerDB
 
+#TODO: Add classdocumentation
 class LoanerDB(DBBase):
     __tablename = ""
     
@@ -233,6 +242,7 @@ class LoanerDB(DBBase):
         return list
 # End of class LoanerDB
 
+#TODO: Add classdocumentation
 class ObjectTypesDB(DBBase):
     __tablename = ""
     def __init__(self):
@@ -261,6 +271,7 @@ class ObjectTypesDB(DBBase):
 
 # End of class ObjectTypesDB
 
+#TODO: Add classdocumentation
 class NationalityDB():
     def __init__(self):
         self.__nationalityList = ["Svensk","Rysk","Finsk","Engelsk"]
@@ -270,6 +281,7 @@ class NationalityDB():
 
 # End of class NationalityDB
 
+#TODO: Add classdocumentation
 class AvailabilityDB():
     def __init__(self):
         self._availabilityList = ["","Till salu", "Uthyres"]

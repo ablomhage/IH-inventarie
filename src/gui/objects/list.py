@@ -69,9 +69,10 @@ class ObjectList(wx.Panel, listmix.ColumnSorterMixin):
             
         self.listCtrl = ObjectListCtrl(self, tID,
                                  style=wx.LC_REPORT 
+                                 #| wx.LC_LIST
                                  #| wx.BORDER_SUNKEN
                                  | wx.BORDER_NONE
-                                 | wx.LC_EDIT_LABELS
+                                 #| wx.LC_EDIT_LABELS
                                  | wx.LC_SORT_ASCENDING
                                  #| wx.LC_NO_HEADER
                                  #| wx.LC_VRULES
