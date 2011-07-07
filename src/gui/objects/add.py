@@ -40,9 +40,6 @@ import dbhandler
 class ObjectAdd(objecttemplate.TemplateObject):
     def __init__(self, parent, id, title):
         objecttemplate.TemplateObject.__init__(self, parent, id, title)
-#        self.__InitUI()
-#        self.Centre()
-#        self.Show()
         
     def OnSave( self, event ):
         objectID = self.tcID.GetValue()
@@ -79,10 +76,6 @@ class ObjectAdd(objecttemplate.TemplateObject):
                 self.cbOwner.SetSelection(-1)
                 self.cbNationality.SetSelection(-1)
                 self.cbType.SetSelection(-1)
-#                    self.cbNationality.Clear()
-#                    self.cbOwner.Clear()
-#                    self.cbType.Clear()
-#                    self.cbAvailability.Clear()
                 
             except dbhandler.IntegrityError:
                 #TODO: Needs a way to distinguise between a Null error and a unique error

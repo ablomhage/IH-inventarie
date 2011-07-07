@@ -60,7 +60,7 @@ class DBBase(object):
         if not os.path.isdir(dir):
             os.makedirs(dir)
         
-        mydb = dir + r'\interaktiv_historia.db'
+        mydb = dir + r'\ih_inventarie.db'
         return mydb
 
     def insert_into_table(self, sql, data):
@@ -290,3 +290,10 @@ class AvailabilityDB():
         return self._availabilityList
     
 # End of class AvailabilityDB
+
+#TODO: Add classdocumentation
+class StorageDB():
+    def __init__(self):
+        DBBase.__init__(self)
+        self.__tablename = "storage"
+#        DBBase.create_table(self, self.__tablename + "()")
