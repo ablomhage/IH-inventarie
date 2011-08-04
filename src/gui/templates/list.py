@@ -116,44 +116,67 @@ class ListTmpl(wx.Panel, listmix.ColumnSorterMixin):
     def SetItems(self, newitems):
         self.__items = newitems
 
+    def GetItems(self):
+        return self.__items
+
     def FetchData(self):
         self.SetItems({ })
 
-    def PopulateList(self):
-        print("Items %s" % self.__items)
-        print("Columns %s" % ListTmpl.__columns)
-        print("storlek %s" % len(ListTmpl.__columns))
-        print("Columnwidth %s" % ListTmpl.__columnwidth)
+    def DefineListHeader(self):
         for i in range(len(ListTmpl.__columns)):
-            print("Column %s" % ListTmpl.__columns[i])
-            print("I %s" % i)
             self.listCtrl.InsertColumn(i, ListTmpl.__columns[i])
+            width = ListTmpl.__columnwidth[i]
             
-            self.listCtrl.SetColumnWidth(i, ListTmpl.__columnwidth[i])
-#        self.listCtrl.InsertColumn(0, u"Företag/förening")
-#        self.listCtrl.InsertColumn(1, u"Kontaktperson")
-#        self.listCtrl.InsertColumn(2, u"Mobilnummer")
-#        self.listCtrl.InsertColumn(3, u"Telefonnummer")
-        
-        items = self.__items.items()
+            self.listCtrl.SetColumnWidth(i, width)
+
+    def AppendListItem(self, key, data):
+        for i in range(len(data)):
+            if i == 0:
+                __index = self.listCtrl.InsertStringItem(sys.maxint, data[0])
+            else:
+                self.listCtrl.SetStringItem(__index, i, data[i])
+                
+        self.listCtrl.SetItemData(__index, key)
+
+    def PopulateList(self):
+#        print("Items %s" % self.__items)
+#        print("Columns %s" % ListTmpl.__columns)
+#        print("storlek %s" % len(ListTmpl.__columns))
+#        print("Columnwidth %s" % ListTmpl.__columnwidth)
+#        for i in range(len(ListTmpl.__columns)):
+#            print("Column %s" % ListTmpl.__columns[i])
+#            print("I %s" % i)
+#            self.listCtrl.InsertColumn(i, ListTmpl.__columns[i])
+#            width = ListTmpl.__columnwidth[i]
+#            
+#            self.listCtrl.SetColumnWidth(i, width)
+##        self.listCtrl.InsertColumn(0, u"Företag/förening")
+##        self.listCtrl.InsertColumn(1, u"Kontaktperson")
+##        self.listCtrl.InsertColumn(2, u"Mobilnummer")
+##        self.listCtrl.InsertColumn(3, u"Telefonnummer")
+#        
+#        items = self.__items.items()
+#        for key, data in items:
+#            for i in range(len(data)):
+#                if i == 0:
+#                    __index = self.listCtrl.InsertStringItem(sys.maxint, data[0])
+#                else:
+#                    self.listCtrl.SetStringItem(__index, i, data[i])
+##            self.listCtrl.SetStringItem(__index, 2, data[2])
+##            self.listCtrl.SetStringItem(__index, 3, data[3])
+##            self.listCtrl.SetItemData(0, __index) 
+#
+#            self.listCtrl.SetItemData(__index, key)
+##            __key = __key + 1
+#
+##        self.listCtrl.SetColumnWidth(0, 150)
+##        self.listCtrl.SetColumnWidth(1, 150)
+##        self.listCtrl.SetColumnWidth(2, 100)
+##        self.listCtrl.SetColumnWidth(3, 100)
+        self.DefineListHeader()
+        items = self.GetItems().items()
         for key, data in items:
-            for i in range(len(data)):
-                if i == 0:
-                    __index = self.listCtrl.InsertStringItem(sys.maxint, data[0])
-                else:
-                    self.listCtrl.SetStringItem(__index, i, data[i])
-#            self.listCtrl.SetStringItem(__index, 2, data[2])
-#            self.listCtrl.SetStringItem(__index, 3, data[3])
-#            self.listCtrl.SetItemData(0, __index) 
-
-            self.listCtrl.SetItemData(__index, key)
-#            __key = __key + 1
-
-#        self.listCtrl.SetColumnWidth(0, 150)
-#        self.listCtrl.SetColumnWidth(1, 150)
-#        self.listCtrl.SetColumnWidth(2, 100)
-#        self.listCtrl.SetColumnWidth(3, 100)
-
+            self.AppendListItem(key, data)
         self.currentItem = 0
 
     # Used by the ColumnSorterMixin, see wx/lib/mixins/listctrl.py
