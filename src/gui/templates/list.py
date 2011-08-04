@@ -34,23 +34,27 @@ Created: 2011-07-06
 
 import wx
 import wx.lib.mixins.listctrl  as  listmix
-#import dbhandler
 import sys
 import locale
 
 tID = wx.NewId()
 
-class PersonListCtrl(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin):
+class ListCtrlTmpl(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin):
     def __init__(self, parent, ID, pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=0):
         wx.ListCtrl.__init__(self, parent, ID, pos, size, style)
         listmix.ListCtrlAutoWidthMixin.__init__(self)
 
-class PersonList(wx.Panel, listmix.ColumnSorterMixin):
+class ListTmpl(wx.Panel, listmix.ColumnSorterMixin):
+    __columns = []
+    __columnwidth = []
+    
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
 #        self.log = log
         
+        self.__items = { }
+        self.FetchData()
         self.__InitLayout()
         
     def __InitLayout(self):
@@ -71,7 +75,7 @@ class PersonList(wx.Panel, listmix.ColumnSorterMixin):
 #        self.sm_up = self.il.Add(images.SmallUpArrow.GetBitmap())
 #        self.sm_dn = self.il.Add(images.SmallDnArrow.GetBitmap())
 
-        self.listCtrl = PersonListCtrl(self, tID,
+        self.listCtrl = ListCtrlTmpl(self, tID,
                                  style=wx.LC_REPORT 
                                  #| wx.BORDER_SUNKEN
                                  | wx.BORDER_NONE
@@ -85,7 +89,6 @@ class PersonList(wx.Panel, listmix.ColumnSorterMixin):
         
 #        self.listCtrl.SetImageList(self.il, wx.IMAGE_LIST_SMALL)
         sizer.Add(self.listCtrl, 1, wx.EXPAND)
-        self.FetchData()
         self.PopulateList()
 
         # Now that the list exists we can init the other base class,
@@ -104,30 +107,52 @@ class PersonList(wx.Panel, listmix.ColumnSorterMixin):
         
         self.listCtrl.Bind(wx.EVT_LEFT_DCLICK, self.OnDoubleClick)
 
+    def SetColumns(self, newcolumns):
+        ListTmpl.__columns = newcolumns
+        
+    def SetColumnWidth(self, newwidth):
+        ListTmpl.__columnwidth = newwidth
+        
+    def SetItems(self, newitems):
+        self.__items = newitems
+
     def FetchData(self):
-        self.__items = { }
+        self.SetItems({ })
 
     def PopulateList(self):
-        self.listCtrl.InsertColumn(0, u"Företag/förening")
-        self.listCtrl.InsertColumn(1, u"Kontaktperson")
-        self.listCtrl.InsertColumn(2, u"Mobilnummer")
-        self.listCtrl.InsertColumn(3, u"Telefonnummer")
+        print("Items %s" % self.__items)
+        print("Columns %s" % ListTmpl.__columns)
+        print("storlek %s" % len(ListTmpl.__columns))
+        print("Columnwidth %s" % ListTmpl.__columnwidth)
+        for i in range(len(ListTmpl.__columns)):
+            print("Column %s" % ListTmpl.__columns[i])
+            print("I %s" % i)
+            self.listCtrl.InsertColumn(i, ListTmpl.__columns[i])
+            
+            self.listCtrl.SetColumnWidth(i, ListTmpl.__columnwidth[i])
+#        self.listCtrl.InsertColumn(0, u"Företag/förening")
+#        self.listCtrl.InsertColumn(1, u"Kontaktperson")
+#        self.listCtrl.InsertColumn(2, u"Mobilnummer")
+#        self.listCtrl.InsertColumn(3, u"Telefonnummer")
         
         items = self.__items.items()
         for key, data in items:
-            __index = self.listCtrl.InsertStringItem(sys.maxint, data[0])
-            self.listCtrl.SetStringItem(__index, 1, data[1])
-            self.listCtrl.SetStringItem(__index, 2, data[2])
-            self.listCtrl.SetStringItem(__index, 3, data[3])
+            for i in range(len(data)):
+                if i == 0:
+                    __index = self.listCtrl.InsertStringItem(sys.maxint, data[0])
+                else:
+                    self.listCtrl.SetStringItem(__index, i, data[i])
+#            self.listCtrl.SetStringItem(__index, 2, data[2])
+#            self.listCtrl.SetStringItem(__index, 3, data[3])
 #            self.listCtrl.SetItemData(0, __index) 
 
             self.listCtrl.SetItemData(__index, key)
 #            __key = __key + 1
 
-        self.listCtrl.SetColumnWidth(0, 150)
-        self.listCtrl.SetColumnWidth(1, 150)
-        self.listCtrl.SetColumnWidth(2, 100)
-        self.listCtrl.SetColumnWidth(3, 100)
+#        self.listCtrl.SetColumnWidth(0, 150)
+#        self.listCtrl.SetColumnWidth(1, 150)
+#        self.listCtrl.SetColumnWidth(2, 100)
+#        self.listCtrl.SetColumnWidth(3, 100)
 
         self.currentItem = 0
 

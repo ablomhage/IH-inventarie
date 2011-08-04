@@ -25,7 +25,7 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #-------------------------------------------------------------------------------
-# -*- coding: utf-8 -*-
+
 __author__="Andreas Blomhage"
 __date__ ="$2011-mar-28 10:47:23$"
 
