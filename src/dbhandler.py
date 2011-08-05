@@ -260,14 +260,11 @@ class ObjectTypesDB(DBBase):
         return list
 
     def RetriveTypesSorted(self):
-        list = DBBase.select_from_table(self, "objecttype from " + self.__tablename)
-        returnlist = []
-        for i in list:
-            returnlist.append(i[0])
-
-        returnlist.sort()
-        
-        return returnlist
+        items = DBBase.select_from_table(self, "objecttype from " + self.__tablename)
+        tmp = list(items)
+        tmp.sort()
+        items = tuple(tmp)
+        return items
 
 # End of class ObjectTypesDB
 
