@@ -184,6 +184,7 @@ class TemplateObject(wx.Dialog):
 
     def PopulateOwner(self):
         owners = dbhandler.OwnerDB().RetriveListOfOwners()
+        print(owners)
         self.cbOwner.AppendItems(owners)
     
     def PopulateNationality(self):

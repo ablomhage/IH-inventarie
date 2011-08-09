@@ -27,19 +27,23 @@
 #-------------------------------------------------------------------------------
 
 '''
-Created: 2011-07-07
+Created on 8 aug 2011
 
-@author: Andreas Blomhage
+@author: AndreasS
 '''
 
-class AddStorageDialog(object):
-    '''
-    classdocs
-    '''
+import gui.templates.list as listtmpl
+import dbhandler
 
+class StorageList(listtmpl.ListTmpl):
+    def __init__(self, parent):
+        listtmpl.ListTmpl.__init__(self, parent)
 
-    def __init__(self):
-        '''
-        Constructor
-        '''
-        
+    def FetchData(self):
+        try:
+            self.SetColumns([u"ID",u"Lokal",u"Rum"])
+            self.SetColumnWidth([150]) 
+            self.SetItems(dict(enumerate(dbhandler.StorageDB().RetriveAllStorage())))
+        except:
+            self.SetItems({ })
+            print("Error retriving loaners data from database")

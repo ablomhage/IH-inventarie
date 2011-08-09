@@ -40,7 +40,7 @@ class DBBase(object):
     def __init__(self):
         """init"""
 
-    def create_table(self, sql):
+    def CreateTable(self, sql):
         try:
             con = sqlite3.connect(self.get_dbpath())
             cur = con.cursor()
@@ -110,7 +110,7 @@ class DBBase(object):
 class ObjectsDB(DBBase):
     def __init__(self):
         DBBase.__init__(self)
-        DBBase.create_table(self, "objects(objectid text unique not null, type text, "+
+        DBBase.CreateTable(self, "objects(objectid text unique not null, type text, "+
             "measurment text, description text, owner integer not null, storage text, "+
             "availability integer, repairneeds text, rent integer, nationality text)")
 
@@ -134,13 +134,13 @@ class ObjectsDB(DBBase):
     def RetriveSpecificObjectData(self, pattern):
         sql = pattern + " FROM objects"
         list = DBBase.select_from_table(self, sql)
-        
+        print(list)
         return list
     
     #TODO: Add comments
     def RetriveAllObjects(self):
         list = DBBase.select_from_table(self, "* from objects")
-       
+        print(list)
         return list 
 # End of class ObjectsDB
 
@@ -150,7 +150,7 @@ class OwnerDB(DBBase):
     def __init__(self):
         DBBase.__init__(self)
         self.__tablename = "owners"
-        DBBase.create_table(self, self.__tablename + "(company varchar, " +
+        DBBase.CreateTable(self, self.__tablename + "(company varchar, " +
                 "contact varchar, address varchar, zip integer, " +
                 "town varchar, phone varchar, mobile varchar, email varchar)")
 
@@ -203,7 +203,6 @@ class OwnerDB(DBBase):
     def RetriveListOfOwners(self):
         list = DBBase.select_from_table(self, "company, contact, address from " + self.__tablename)
         returnlist = []
-
         for i in list:
             if(i[0] == ''):
                 new = i[1] + ', ' + i[2]
@@ -227,7 +226,7 @@ class LoanerDB(DBBase):
     def __init__(self):
         DBBase.__init__(self)
         self.__tablename = "loaners"
-        DBBase.create_table(self, "loaners(company varchar, " +
+        DBBase.CreateTable(self, "loaners(company varchar, " +
                 "contact varchar, address varchar, zip integer, " +
                 "town varchar, phone varchar, mobile varchar, email varchar)")
 
@@ -248,7 +247,7 @@ class ObjectTypesDB(DBBase):
     def __init__(self):
         DBBase.__init__(self)
         self.__tablename = "objecttypes"
-        DBBase.create_table(self, self.__tablename + "(objecttype primary key)")
+        DBBase.CreateTable(self, self.__tablename + "(objecttype primary key)")
 
     def insert_into_table(self, data):
         sql = self.__tablename + " values (?)"
@@ -261,9 +260,8 @@ class ObjectTypesDB(DBBase):
 
     def RetriveTypesSorted(self):
         items = DBBase.select_from_table(self, "objecttype from " + self.__tablename)
-        tmp = list(items)
-        tmp.sort()
-        items = tuple(tmp)
+        tmp = [u', '.join(map(str, item)) for item in items]
+        items = sorted(tmp, key=unicode.lower)
         return items
 
 # End of class ObjectTypesDB
@@ -292,5 +290,20 @@ class AvailabilityDB():
 class StorageDB():
     def __init__(self):
         DBBase.__init__(self)
-        self.__tablename = "storage"
-#        DBBase.create_table(self, self.__tablename + "()")
+        self.__tableName = "storage"
+#        DBBase.CreateTable(self, self.__tablename + "()")
+
+    def CreateTable(self):
+        DBBase.CreateTable(self, self.__tableName + "(id text primary key, location text, room text)")
+
+    def AddStorage(self, data):
+        sql = self.__tablename + " values (?)"
+        DBBase.insert_into_table(self, sql, (data,))
+
+    def RetriveStorageList(self):
+        list = DBBase.select_from_table(self, "id from " + self.__tableName)
+
+    def RetriveAllStorage(self):
+        list = DBBase.select_from_table(self, "id, location, room from " + self.__tableName)
+        return list
+
