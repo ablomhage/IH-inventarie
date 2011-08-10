@@ -26,20 +26,30 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #-------------------------------------------------------------------------------
 
+import wx
+import wx.xrc as xrc
+
 '''
 Created: 2011-07-07
 
 @author: Andreas Blomhage
 '''
 
-class AddStorageDialog(object):
-    '''
-    classdocs
-    '''
+class AddStorageDialog(wx.Dialog):
 
-
-    def __init__(self):
-        '''
-        Constructor
-        '''
+    def __init__(self, parent, id, title):
+        self.res = xrc.XmlResource("add.xrc")
+        self.InitFrame()
+        self.InitEverythingElse()
+        
+    def InitFrame(self):
+        self.frame = self.res.LoadFrame(None, 'AddStorageDialog')
+        self.textLocation = xrc.XRCCTRL(self.frame, 'textLocation')
+        self.tcLocation = xrc.XRCCTRL(self.frame, 'tcLocation')
+        
+    def InitEverythingElse(self):
+        sizer = self.frame.GetSizer()
+        sizer.Fit(self.frame)
+        sizer.SetSizeHints(self.frame)
+        self.frame.Show()
         

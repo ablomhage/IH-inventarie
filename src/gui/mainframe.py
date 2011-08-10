@@ -32,9 +32,7 @@ __date__ ="$2011-mar-28 11:01:51$"
 import dbhandler
 import wx
 import wx.lib.agw.flatnotebook as fnb
-#import gui.addframes.addobjectdialog
-#import gui.addframes.addownerdialog
-#import gui.addframes.addloanerdialog
+
 import gui.objects.list as objectslist
 import gui.objects.add as objectsadd
 import gui.owners.list as ownerslist
@@ -42,12 +40,14 @@ import gui.owners.add as ownersadd
 import gui.loaners.list as loanerslist
 import gui.loaners.add as loanersadd
 import gui.types.list as typelist
+import gui.storage.add as storageadd
 
 
 ID_EXIT         = wx.NewId()
 ID_ADDOBJECT    = wx.NewId()
 ID_ADDOWNER     = wx.NewId()
 ID_ADDLOANER    = wx.NewId()
+ID_ADDSTORAGE   = wx.NewId()
 ID_ADDTYPE      = wx.NewId()
 ID_ABOUT        = wx.NewId()
 ID_LISTOBJECT   = wx.NewId()
@@ -81,7 +81,9 @@ class MainFrame(wx.Frame):
             u"Lägg till en ny låntagare")
         addmenu.Append(ID_ADDTYPE,"&Typ",
             u"Lägg till en ny objekt-typ")
-
+        addmenu.Append(ID_ADDSTORAGE,u"Förvaring",
+            u"Lägg till en ny förvaringsplats")
+        
         listmenu = wx.Menu()
         listmenu.Append(ID_LISTOBJECT, u"Objekt")
         listmenu.Append(ID_LISTOWNER, u"Ägare")
@@ -110,6 +112,7 @@ class MainFrame(wx.Frame):
         wx.EVT_MENU(self, ID_ADDOWNER, self.OnAddOwner)
         wx.EVT_MENU(self, ID_ADDLOANER, self.OnAddLoaner)
         wx.EVT_MENU(self, ID_ADDTYPE, self.OnAddType)
+        wx.EVT_MENU(self, ID_ADDSTORAGE, self.OnAddStorage)
 
         wx.EVT_MENU(self, ID_LISTOBJECT, self.OnListObjects)
         wx.EVT_MENU(self, ID_LISTOWNER, self.OnListOwners)
@@ -174,6 +177,9 @@ class MainFrame(wx.Frame):
 
     def OnAddLoaner(self, event):
         dlg = loanersadd.AddLoanerDialog(self, -1, u"Lägg till låntagare")
+
+    def OnAddStorage(self, event):
+        dlg = storageadd.AddStorageDialog(self, -1, u"Lägg till förvaringsplats")
 
     def OnAddType(self, event):
         dlg = wx.TextEntryDialog(self, 'Enter some text',u'Lägg till typ')
@@ -243,9 +249,27 @@ class MainFrame(wx.Frame):
 
 class MyApp(wx.App):
     def OnInit(self):
+        # Load all controls:
+        self._do_layout()
+        return True
+    
+    def _do_layout(self):
         frame = MainFrame(None, -1, "Interaktiv Historias inventarie")
+#        self.res = xrc.XmlResource(' GUI_FILENAME ')
         frame.Centre()
         frame.Show()
         self.SetTopWindow(frame)
-        return 1
+    
+#    def _do_layout(self):
+#        self.res = xrc.XmlResource( GUI_FILENAME )
+#        self.frame = self.res.LoadFrame( None, GUI_MAINFRAME_NAME )
+#        self.SetTopWindow(self.frame)
+#        self.frame.Show(1)
+    
+#    def OnInit(self):
+#        frame = MainFrame(None, -1, "Interaktiv Historias inventarie")
+#        frame.Centre()
+#        frame.Show()
+#        self.SetTopWindow(frame)
+#        return 1
 # End of class MyApp
