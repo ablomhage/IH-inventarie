@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <resource xmlns="http://www.wxwindows.org/wxxrc" version="2.3.0.1">
-    <object class="wxFrame" name="mainFrame" subclass="gui.mainframe.MainFrame">
+    <object class="wxFrame" name="mainFrame">
         <style>wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL</style>
         <size>800,600</size>
         <title>Interaktiv Historias inventarie</title>
         <centered>1</centered>
-        <object class="wxFlatNotebook" name="flatNB">
-            <style>wxFNB_DEFAULT_STYLE</style>
-            <bg>#f0f0f0</bg>
-        </object>
+        <object class="wxNotebook" name="mainNB" />
         <object class="wxStatusBar" name="mainStatusbar">
             <style>wxST_SIZEGRIP</style>
             <fields>1</fields>
