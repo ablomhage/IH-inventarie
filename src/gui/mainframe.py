@@ -29,9 +29,16 @@
 __author__="Andreas Blomhage"
 __date__ ="$2011-mar-28 11:01:51$"
 
-import dbhandler
+
 import wx
+import wx.xrc as xrc
 import wx.lib.agw.flatnotebook as fnb
+
+import os
+
+import sys
+
+import dbhandler
 
 import gui.objects.list as objectslist
 import gui.objects.add as objectsadd
@@ -56,7 +63,7 @@ ID_LISTLOANER   = wx.NewId()
 ID_LISTTYPE     = wx.NewId()
 ID_LISTSTORAGE  = wx.NewId()
 
-class MainFrame(wx.Frame):
+class MainFrameOld(wx.Frame):
     def __init__(self, parent, ID, title):
         wx.Frame.__init__(self, parent, ID, title,
                          wx.DefaultPosition, size=(800,600))
@@ -246,12 +253,34 @@ class MainFrame(wx.Frame):
 
 # End of class MainFrame
 
+class MainFrame(wx.Frame):
+    def __init__(self): 
+        pre = wx.PreFrame()
+        # XRC will do the Create
+        self.PostCreate(pre)
+        self.Bind(wx.EVT_WINDOW_CREATE, self.onCreate)
+
+    def onCreate(self, evt):
+        self.Unbind(wx.EVT_WINDOW_CREATE)
+        self.Fit()
+        self.book = xrc.XRCCTRL(self, 'flatNB')
+
 
 class MyApp(wx.App):
     def OnInit(self):
         # Load all controls:
-        self._do_layout()
-        return True
+#        self.res = xrc.XmlResource(os.path.join"mainframe.xrc")
+
+        dname = os.path.dirname(sys.argv[0])
+        tmprestxt = file(os.path.join(dname + "\gui\mainframe.xrc")).read()
+        self.res = xrc.EmptyXmlResource()
+#        self.res.InsertHandler(FlatNotebookXmlHandler())
+        self.res.LoadFromString(tmprestxt) 
+#        self.frame = MainFrame(None, self.res) 
+        self.frame = self.res.LoadFrame(None, 'mainFrame')
+        self.SetTopWindow(self.frame)
+        self.frame.Show(True)
+        return True 
     
     def _do_layout(self):
         frame = MainFrame(None, -1, "Interaktiv Historias inventarie")
@@ -259,6 +288,19 @@ class MyApp(wx.App):
         frame.Centre()
         frame.Show()
         self.SetTopWindow(frame)
+
+    def InitFrame(self):
+        self.frame = self.res.LoadFrame(None, 'mainFrame')
+        
+#        self.textLocation = xrc.XRCCTRL(self.frame, 'textLocation')
+#        self.tcLocation = xrc.XRCCTRL(self.frame, 'tcLocation')
+        
+    def InitEverythingElse(self):
+        pass
+#        sizer = self.frame.GetSizer()
+#        sizer.Fit(self.frame)
+#        sizer.SetSizeHints(self.frame)
+#        self.frame.Show()
     
 #    def _do_layout(self):
 #        self.res = xrc.XmlResource( GUI_FILENAME )
