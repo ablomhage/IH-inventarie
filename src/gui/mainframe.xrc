@@ -5,7 +5,8 @@
         <size>800,600</size>
         <title>Interaktiv Historias inventarie</title>
         <centered>1</centered>
-        <object class="wxNotebook" name="mainNB" />
+        <object class="wxNotebook" name="mainNB">
+        </object>
         <object class="wxStatusBar" name="mainStatusbar">
             <style>wxST_SIZEGRIP</style>
             <fields>1</fields>

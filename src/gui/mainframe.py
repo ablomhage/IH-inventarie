@@ -253,6 +253,19 @@ class MainFrameOld(wx.Frame):
 
 # End of class MainFrame
 
+class TabPanel(wx.Panel):
+    def __init__(self, parent):
+        wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        txtOne = wx.TextCtrl(self, wx.ID_ANY, "")
+        txtTwo = wx.TextCtrl(self, wx.ID_ANY, "")
+         
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        sizer.Add(txtOne, 0, wx.ALL, 5)
+        sizer.Add(txtTwo, 0, wx.ALL, 5)
+         
+        self.SetSizer(sizer)
+
 class MainFrame(wx.Frame):
     def __init__(self): 
         pre = wx.PreFrame()
@@ -263,8 +276,13 @@ class MainFrame(wx.Frame):
     def onCreate(self, evt):
         self.Unbind(wx.EVT_WINDOW_CREATE)
         self.Fit()
-        self.book = xrc.XRCCTRL(self, 'flatNB')
-
+        self.notebook = xrc.XRCCTRL(self, 'mainNB')
+        tmp = TabPanel(self.notebook)
+        #TODO: Seems we can't get the same behaviour here so make sure to fix it.
+        self.Freeze()
+        self.notebook.AddPage(tmp, "TabOne")
+        self.Thaw()
+        
 
 class MyApp(wx.App):
     def OnInit(self):
