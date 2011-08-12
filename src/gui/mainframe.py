@@ -48,6 +48,7 @@ import gui.loaners.list as loanerslist
 import gui.loaners.add as loanersadd
 import gui.types.list as typelist
 import gui.storage.add as storageadd
+import gui.list
 
 
 ID_EXIT         = wx.NewId()
@@ -274,14 +275,17 @@ class MainFrame(wx.Frame):
         self.Bind(wx.EVT_WINDOW_CREATE, self.onCreate)
 
     def onCreate(self, evt):
+        print("Kommer vi ens hit?")
         self.Unbind(wx.EVT_WINDOW_CREATE)
+        wx.CallAfter(self._PostInit)
+#        event.Skip()
         self.Fit()
         self.notebook = xrc.XRCCTRL(self, 'mainNB')
-        tmp = TabPanel(self.notebook)
+#        tmp = TabPanel(self.notebook)
+        res = xrc.XmlResource("objectlist.xrc")
+        tmp = res.LoadPanel(self.notebook, "objectListPanel")
         #TODO: Seems we can't get the same behaviour here so make sure to fix it.
-        self.Freeze()
         self.notebook.AddPage(tmp, "TabOne")
-        self.Thaw()
         
 
 class MyApp(wx.App):
@@ -296,6 +300,14 @@ class MyApp(wx.App):
         self.res.LoadFromString(tmprestxt) 
 #        self.frame = MainFrame(None, self.res) 
         self.frame = self.res.LoadFrame(None, 'mainFrame')
+        self.notebook = xrc.XRCCTRL(self.frame, 'mainNB')
+#        tmp = TabPanel(self.notebook)
+        tmprestxt = file(os.path.join(dname + "\gui\objectlist.xrc")).read()
+        self.res = xrc.EmptyXmlResource()
+        self.res.LoadFromString(tmprestxt)
+        tmp = self.res.LoadPanel(self.notebook, "objectListPanel")
+        #TODO: Seems we can't get the same behaviour here so make sure to fix it.
+        self.notebook.AddPage(tmp, "TabOne")
         self.SetTopWindow(self.frame)
         self.frame.Show(True)
         return True 
