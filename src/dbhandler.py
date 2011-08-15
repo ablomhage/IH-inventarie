@@ -287,23 +287,26 @@ class AvailabilityDB():
 # End of class AvailabilityDB
 
 #TODO: Add classdocumentation
-class StorageDB():
+class StorageDB(DBBase):
+    __tablename = ""
     def __init__(self):
         DBBase.__init__(self)
         self.__tableName = "storage"
 #        DBBase.CreateTable(self, self.__tablename + "()")
 
     def CreateTable(self):
-        DBBase.CreateTable(self, self.__tableName + "(id text primary key, location text, room text)")
+        DBBase.CreateTable(self, self.__tableName + "(location text not null, room text not null)")
 
     def AddStorage(self, data):
         sql = self.__tablename + " values (?)"
         DBBase.insert_into_table(self, sql, (data,))
 
     def RetriveStorageList(self):
-        list = DBBase.select_from_table(self, "id from " + self.__tableName)
+        list = self.RetriveAllStorage()
+        
+        print(list)
 
     def RetriveAllStorage(self):
-        list = DBBase.select_from_table(self, "id, location, room from " + self.__tableName)
+        list = DBBase.select_from_table(self, "location, room from " + self.__tableName)
         return list
 

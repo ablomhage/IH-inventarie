@@ -41,9 +41,9 @@ class StorageList(listtmpl.ListTmpl):
 
     def FetchData(self):
         try:
-            self.SetColumns([u"ID",u"Lokal",u"Rum"])
-            self.SetColumnWidth([150]) 
+            self.SetColumns([u"Lokal",u"Rum"])
+            self.SetColumnWidth([250, 150]) 
             self.SetItems(dict(enumerate(dbhandler.StorageDB().RetriveAllStorage())))
         except:
             self.SetItems({ })
-            print("Error retriving loaners data from database")
+            print("Error retriving storage data from database")

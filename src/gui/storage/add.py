@@ -27,7 +27,8 @@
 #-------------------------------------------------------------------------------
 
 import wx
-import wx.xrc as xrc
+import dbhandler
+import gui.errordialogs as errdlg
 
 '''
 Created: 2011-07-07
@@ -36,20 +37,64 @@ Created: 2011-07-07
 '''
 
 class AddStorageDialog(wx.Dialog):
-
     def __init__(self, parent, id, title):
-        self.res = xrc.XmlResource("add.xrc")
-        self.InitFrame()
-        self.InitEverythingElse()
+        wx.Dialog.__init__(self, parent, id, title, size=(500,300))
+        self.__InitUI()
+        self.Centre()
+        self.Show()
+
+    def __InitUI(self):
+        mainSizer = wx.BoxSizer(wx.VERTICAL)
+        grid = wx.GridBagSizer(hgap=5, vgap=7)
+        hSizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        #=======================================================================
+        # Location    
+        #=======================================================================
+        textLocation        = wx.StaticText(self, label="Lokal: ")
+        self.tcLocation     = wx.TextCtrl(self, wx.ID_ANY, size=(150,-1))
+        grid.Add(textLocation, pos=(0,0))
+        grid.Add(self.tcLocation, pos=(0,1))
         
-    def InitFrame(self):
-        self.frame = self.res.LoadFrame(None, 'AddStorageDialog')
-        self.textLocation = xrc.XRCCTRL(self.frame, 'textLocation')
-        self.tcLocation = xrc.XRCCTRL(self.frame, 'tcLocation')
+        #=======================================================================
+        # Room    
+        #=======================================================================
+        textRoom            = wx.StaticText(self, label="Rum: ")
+        self.tcRoom         = wx.TextCtrl(self, wx.ID_ANY, size=(150,-1))
+        grid.Add(textRoom, pos=(0,2))
+        grid.Add(self.tcRoom, pos=(0,3))
         
-    def InitEverythingElse(self):
-        sizer = self.frame.GetSizer()
-        sizer.Fit(self.frame)
-        sizer.SetSizeHints(self.frame)
-        self.frame.Show()
+        btClose = wx.Button(self, wx.ID_CLOSE, u"Stäng")
+        btSave  = wx.Button(self, wx.ID_SAVE, u"Spara")
+
+        buttons = wx.BoxSizer(wx.HORIZONTAL)
+        
+        buttons.Add(btSave, wx.RIGHT)
+        buttons.Add(btClose, wx.RIGHT)
+        
+        self.Bind(wx.EVT_BUTTON, self.OnSave, id=wx.ID_SAVE)
+        self.Bind(wx.EVT_BUTTON, self.OnQuit, id=wx.ID_CLOSE)
+        
+        hSizer.Add(grid, 0, wx.ALL, 5)
+
+        mainSizer.Add(hSizer, 0, wx.ALL, 5)
+        mainSizer.Add(buttons, 0, wx.ALIGN_RIGHT)
+        self.SetSizerAndFit(mainSizer)
+        
+        
+    def OnQuit( self, event ):
+        self.Close()
+    
+    def OnSave( self, event ):
+        location    = self.tcLocation.GetValue()
+        room        = self.tcRoom.GetValue()
+            
+        mydb = dbhandler.StorageDB()
+        try:
+                mydb.AddStorage((location, room))
+        except dbhandler.IntegrityError:
+            #TODO: Needs a way to distinguise between a Null error and a unique error
+            errdlg.ErrDlgUniqueID(self)
+        else:
+            errdlg.ErrDlgMissingID(self)
         

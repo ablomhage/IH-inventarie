@@ -47,6 +47,7 @@ import gui.loaners.list as loanerslist
 import gui.loaners.add as loanersadd
 import gui.types.list as typelist
 import gui.storage.add as storageadd
+import gui.storage.list as storagelist
 
 ID_EXIT         = wx.NewId()
 ID_ADDOBJECT    = wx.NewId()
@@ -61,7 +62,7 @@ ID_LISTLOANER   = wx.NewId()
 ID_LISTTYPE     = wx.NewId()
 ID_LISTSTORAGE  = wx.NewId()
 
-class MainFrameOld(wx.Frame):
+class MainFrame(wx.Frame):
     def __init__(self, parent, ID, title):
         wx.Frame.__init__(self, parent, ID, title,
                          wx.DefaultPosition, size=(800,600))
@@ -194,9 +195,7 @@ class MainFrameOld(wx.Frame):
             type = dlg.GetValue()
             mydb.insert_into_table(type)
 
-        dlg.Destroy()
-        
-    
+        dlg.Destroy()    
 
     def OnListObjects(self, event):
         caption = u"Objekt"
@@ -242,6 +241,15 @@ class MainFrameOld(wx.Frame):
             self.Thaw()
     
     def OnListStorage(self, event):
+        caption = u"Förvaringsplatser"
+        
+        page = self.IsTabOpen(caption)
+        if(page > -1):
+            self.book.SetSelection(page)
+        else:
+            self.Freeze()
+            self.book.AddPage(storagelist.StorageList(wx.Panel(self.book)), caption, True)
+            self.Thaw()
         pass
 
 #    def create_page(self, caption):
