@@ -88,13 +88,13 @@ class AddStorageDialog(wx.Dialog):
     def OnSave( self, event ):
         location    = self.tcLocation.GetValue()
         room        = self.tcRoom.GetValue()
-            
+        insert      = (location, room)
         mydb = dbhandler.StorageDB()
         try:
-                mydb.AddStorage((location, room))
+                mydb.AddStorage(insert)
         except dbhandler.IntegrityError:
             #TODO: Needs a way to distinguise between a Null error and a unique error
-            errdlg.ErrDlgUniqueID(self)
+            pass
         else:
-            errdlg.ErrDlgMissingID(self)
+            pass
         

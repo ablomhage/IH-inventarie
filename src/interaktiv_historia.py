@@ -30,10 +30,18 @@ __author__="Andreas Blomhage"
 __date__ ="$2011-mar-12 17:00:00$"
 
 import gui.mainframe
+import dbhandler
+
 #import sys
 #sys.stdout = open("mylog.txt", "w")
 
 #app = gui.mainframe.MyApp(1, 'output.log')
 #For debugpurposes, change to the upper one at distribution
+
+#===============================================================================
+# Init databases
+#===============================================================================
+dbhandler.StorageDB().CreateTable()
+
 app = gui.mainframe.MyApp(0)
 app.MainLoop()

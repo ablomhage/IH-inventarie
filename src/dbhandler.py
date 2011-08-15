@@ -255,13 +255,15 @@ class ObjectTypesDB(DBBase):
 
     def RetriveAllTypes(self):
         list = DBBase.select_from_table(self, "objecttype from " + self.__tablename)
-        
+        print(list)
         return list
 
     def RetriveTypesSorted(self):
         items = DBBase.select_from_table(self, "objecttype from " + self.__tablename)
+        print(items)
         tmp = [u', '.join(map(str, item)) for item in items]
         items = sorted(tmp, key=unicode.lower)
+        print(items)
         return items
 
 # End of class ObjectTypesDB
@@ -288,7 +290,7 @@ class AvailabilityDB():
 
 #TODO: Add classdocumentation
 class StorageDB(DBBase):
-    __tablename = ""
+    __tableName = ""
     def __init__(self):
         DBBase.__init__(self)
         self.__tableName = "storage"
@@ -298,8 +300,11 @@ class StorageDB(DBBase):
         DBBase.CreateTable(self, self.__tableName + "(location text not null, room text not null)")
 
     def AddStorage(self, data):
-        sql = self.__tablename + " values (?)"
-        DBBase.insert_into_table(self, sql, (data,))
+        sql = self.__tableName + " values (?,?)"
+        try:
+            DBBase.insert_into_table(self, sql, data)
+        except sqlite3.Error, error:
+            print error
 
     def RetriveStorageList(self):
         list = self.RetriveAllStorage()

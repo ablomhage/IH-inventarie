@@ -42,7 +42,7 @@ class TypeList(listtmpl.ListTmpl):
         try:
             self.SetColumns([u"Objekttyp",])
             self.SetColumnWidth([150]) 
-            self.SetItems(dict(enumerate(dbhandler.ObjectTypesDB().RetriveTypesSorted())))
+            self.SetItems(dict(enumerate(dbhandler.ObjectTypesDB().RetriveAllTypes())))
         except:
             self.SetItems({ })
             print("Error retriving loaners data from database")
