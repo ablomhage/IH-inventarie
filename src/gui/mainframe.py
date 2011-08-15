@@ -31,7 +31,6 @@ __date__ ="$2011-mar-28 11:01:51$"
 
 
 import wx
-import wx.xrc as xrc
 import wx.lib.agw.flatnotebook as fnb
 
 import os
@@ -48,8 +47,6 @@ import gui.loaners.list as loanerslist
 import gui.loaners.add as loanersadd
 import gui.types.list as typelist
 import gui.storage.add as storageadd
-import gui.list
-
 
 ID_EXIT         = wx.NewId()
 ID_ADDOBJECT    = wx.NewId()
@@ -254,94 +251,11 @@ class MainFrameOld(wx.Frame):
 
 # End of class MainFrame
 
-class TabPanel(wx.Panel):
-    def __init__(self, parent):
-        wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
-        sizer = wx.BoxSizer(wx.VERTICAL)
-        txtOne = wx.TextCtrl(self, wx.ID_ANY, "")
-        txtTwo = wx.TextCtrl(self, wx.ID_ANY, "")
-         
-        sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(txtOne, 0, wx.ALL, 5)
-        sizer.Add(txtTwo, 0, wx.ALL, 5)
-         
-        self.SetSizer(sizer)
-
-class MainFrame(wx.Frame):
-    def __init__(self): 
-        pre = wx.PreFrame()
-        # XRC will do the Create
-        self.PostCreate(pre)
-        self.Bind(wx.EVT_WINDOW_CREATE, self.onCreate)
-
-    def onCreate(self, evt):
-        print("Kommer vi ens hit?")
-        self.Unbind(wx.EVT_WINDOW_CREATE)
-        wx.CallAfter(self._PostInit)
-#        event.Skip()
-        self.Fit()
-        self.notebook = xrc.XRCCTRL(self, 'mainNB')
-#        tmp = TabPanel(self.notebook)
-        res = xrc.XmlResource("objectlist.xrc")
-        tmp = res.LoadPanel(self.notebook, "objectListPanel")
-        #TODO: Seems we can't get the same behaviour here so make sure to fix it.
-        self.notebook.AddPage(tmp, "TabOne")
-        
-
 class MyApp(wx.App):
     def OnInit(self):
-        # Load all controls:
-#        self.res = xrc.XmlResource(os.path.join"mainframe.xrc")
-
-        dname = os.path.dirname(sys.argv[0])
-        tmprestxt = file(os.path.join(dname + "\gui\mainframe.xrc")).read()
-        self.res = xrc.EmptyXmlResource()
-#        self.res.InsertHandler(FlatNotebookXmlHandler())
-        self.res.LoadFromString(tmprestxt) 
-#        self.frame = MainFrame(None, self.res) 
-        self.frame = self.res.LoadFrame(None, 'mainFrame')
-        self.notebook = xrc.XRCCTRL(self.frame, 'mainNB')
-#        tmp = TabPanel(self.notebook)
-        tmprestxt = file(os.path.join(dname + "\gui\objectlist.xrc")).read()
-        self.res = xrc.EmptyXmlResource()
-        self.res.LoadFromString(tmprestxt)
-        tmp = self.res.LoadPanel(self.notebook, "objectListPanel")
-        #TODO: Seems we can't get the same behaviour here so make sure to fix it.
-        self.notebook.AddPage(tmp, "TabOne")
-        self.SetTopWindow(self.frame)
-        self.frame.Show(True)
-        return True 
-    
-    def _do_layout(self):
         frame = MainFrame(None, -1, "Interaktiv Historias inventarie")
-#        self.res = xrc.XmlResource(' GUI_FILENAME ')
         frame.Centre()
         frame.Show()
         self.SetTopWindow(frame)
-
-    def InitFrame(self):
-        self.frame = self.res.LoadFrame(None, 'mainFrame')
-        
-#        self.textLocation = xrc.XRCCTRL(self.frame, 'textLocation')
-#        self.tcLocation = xrc.XRCCTRL(self.frame, 'tcLocation')
-        
-    def InitEverythingElse(self):
-        pass
-#        sizer = self.frame.GetSizer()
-#        sizer.Fit(self.frame)
-#        sizer.SetSizeHints(self.frame)
-#        self.frame.Show()
-    
-#    def _do_layout(self):
-#        self.res = xrc.XmlResource( GUI_FILENAME )
-#        self.frame = self.res.LoadFrame( None, GUI_MAINFRAME_NAME )
-#        self.SetTopWindow(self.frame)
-#        self.frame.Show(1)
-    
-#    def OnInit(self):
-#        frame = MainFrame(None, -1, "Interaktiv Historias inventarie")
-#        frame.Centre()
-#        frame.Show()
-#        self.SetTopWindow(frame)
-#        return 1
+        return 1
 # End of class MyApp
