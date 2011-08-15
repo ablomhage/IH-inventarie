@@ -53,12 +53,14 @@ class ListTmpl(wx.Panel, listmix.ColumnSorterMixin):
     def __init__(self): 
         pre = wx.PrePanel()
         # XRC will do the Create
+        print("Initierar listpanel")
         self.PostCreate(pre)
         self.Bind(wx.EVT_WINDOW_CREATE, self.OnCreate)
         self.__items = { }
         self.FetchData()
 
     def OnCreate(self, evt):
+        print("Creating panel")
         self.Unbind ( wx.EVT_WINDOW_CREATE )
         wx.CallAfter(self.__PostInit)
         evt.Skip()
@@ -66,17 +68,24 @@ class ListTmpl(wx.Panel, listmix.ColumnSorterMixin):
 
     def __PostInit(self):
         self.listCtrl = xrc.XRCCTRL(self, 'listCtrl')
-        self.DefineListHeader()
+        print(self.listCtrl)
+        self.__SetColumns(["ObjektID","Ägare","Typ"])
+        self.__DefineListHeader()
+        
 #        tmp = res.LoadPanel(self.notebook, "objectListPanel")
 
-    def SetColumns(self, newcolumns):
-        ListTmpl.__columns = newcolumns
-        ListTmpl.__columns = ["ObjektID","Ägare","Typ"]
+    def __SetColumns(self, newcolumns):
+        print(newcolumns)
+        self.__columns = newcolumns
+#        ListTmpl.__columns = ["ObjektID","Ägare","Typ"]
 
-    def DefineListHeader(self):
-        for i in range(len(ListTmpl.__columns)):
-            self.listCtrl.InsertColumn(i, ListTmpl.__columns[i])
-            width = ListTmpl.__columnwidth[i]
+    def __DefineListHeader(self):
+        print("Control: %s" % self.listCtrl)
+        print(self.__columns)
+        for i in range(len(self.__columns)):
+            print("Vi kommer hit")
+            self.listCtrl.InsertColumn(i, self.__columns[i])
+#            width = ListTmpl.__columnwidth[i]
             
 #            listCtrl.SetColumnWidth(i, width)
 
