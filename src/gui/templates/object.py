@@ -104,10 +104,11 @@ class TemplateObject(wx.Dialog):
         # Storage
         #=======================================================================
         textStorage     = wx.StaticText(self, label=u"Förvaringsplats: ")
-        self.tcStorage  = wx.TextCtrl(self, wx.ID_ANY, size=(150, -1))
+        self.cbStorage  = wx.ComboBox(self, -1, choices=[], style=wx.CB_READONLY, size=(150,-1))
+        self.PopulateStorage()
 
         grid.Add(textStorage, pos=(2,2))
-        grid.Add(self.tcStorage, pos=(2,3))
+        grid.Add(self.cbStorage, pos=(2,3))
         
         #=======================================================================
         # Availability
@@ -184,12 +185,15 @@ class TemplateObject(wx.Dialog):
 
     def PopulateOwner(self):
         owners = dbhandler.OwnerDB().RetriveListOfOwners()
-        print(owners)
         self.cbOwner.AppendItems(owners)
     
     def PopulateNationality(self):
         nationality = dbhandler.NationalityDB().RetriveNationalities()
         self.cbNationality.AppendItems(nationality)
+
+    def PopulateStorage(self):
+        storage = dbhandler.StorageDB().RetriveStorageList()
+        self.cbStorage.AppendItems(storage)
     
     def PopulateType(self):
         types = dbhandler.ObjectTypesDB().RetriveTypesSorted()

@@ -134,13 +134,11 @@ class ObjectsDB(DBBase):
     def RetriveSpecificObjectData(self, pattern):
         sql = pattern + " FROM objects"
         list = DBBase.select_from_table(self, sql)
-        print(list)
         return list
     
     #TODO: Add comments
     def RetriveAllObjects(self):
         list = DBBase.select_from_table(self, "* from objects")
-        print(list)
         return list 
 # End of class ObjectsDB
 
@@ -197,7 +195,6 @@ class OwnerDB(DBBase):
     def RetriveSpecificOwnerData(self, pattern):
         sql = pattern + " FROM " + self.__tablename
         list = DBBase.select_from_table(self, sql)
-        print("List %s" % list)
         return list
 
     def RetriveListOfOwners(self):
@@ -237,7 +234,6 @@ class LoanerDB(DBBase):
     def RetriveSpecificLoanerData(self, pattern):
         sql = pattern + " FROM " + self.__tablename
         list = DBBase.select_from_table(self, sql)
-        print("List %s" % list)
         return list
 # End of class LoanerDB
 
@@ -255,15 +251,12 @@ class ObjectTypesDB(DBBase):
 
     def RetriveAllTypes(self):
         list = DBBase.select_from_table(self, "objecttype from " + self.__tablename)
-        print(list)
         return list
 
     def RetriveTypesSorted(self):
         items = DBBase.select_from_table(self, "objecttype from " + self.__tablename)
-        print(items)
         tmp = [u', '.join(map(str, item)) for item in items]
         items = sorted(tmp, key=unicode.lower)
-        print(items)
         return items
 
 # End of class ObjectTypesDB
@@ -308,8 +301,8 @@ class StorageDB(DBBase):
 
     def RetriveStorageList(self):
         list = self.RetriveAllStorage()
-        
-        print(list)
+        tmp = [u', '.join(map(str, item)) for item in list]
+        return tmp
 
     def RetriveAllStorage(self):
         list = DBBase.select_from_table(self, "location, room from " + self.__tableName)
