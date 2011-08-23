@@ -77,7 +77,7 @@ class DBBase(object):
         cur.close()
         con.close()
 
-    def search_in_table(self, sql, criteria):
+    def SearchTable(self, sql, criteria):
         con = sqlite3.connect(self.get_dbpath())
         cur = con.cursor()
         sql = "select " + sql
@@ -127,7 +127,7 @@ class ObjectsDB(DBBase):
             raise IntegrityError('Key already exists')
     
     def RetriveObject(self, objectID):
-        object = DBBase.search_in_table(self, "* from objects where objectid=?", (objectID, ))
+        object = DBBase.SearchTable(self, "* from objects where objectid=?", (objectID, ))
         
         return object[0]
 
@@ -140,6 +140,11 @@ class ObjectsDB(DBBase):
     def RetriveAllObjects(self):
         list = DBBase.select_from_table(self, "* from objects")
         return list 
+    
+    def Search(self, column, criteria):
+        sql = "* from objects where " + column + " like ?"
+        items = DBBase.SearchTable(self, sql, (criteria,))
+    
 # End of class ObjectsDB
 
 #TODO: Add classdocumentation
@@ -162,7 +167,7 @@ class OwnerDB(DBBase):
     def RetriveOwnerID(self, owner):
         ownerlist = owner.split(', ')
         try:
-            list = DBBase.search_in_table(self, "rowid from " +
+            list = DBBase.SearchTable(self, "rowid from " +
                 self.__tablename + " where contact=? and address=?",(ownerlist[0],ownerlist[1],))
 
             try:
@@ -170,7 +175,7 @@ class OwnerDB(DBBase):
             except:
                 return None
         except:
-            list = DBBase.search_in_table(self, "rowid from " +
+            list = DBBase.SearchTable(self, "rowid from " +
                 self.__tablename + " where company=?",(ownerlist[0],))
             try:
                 return list[0][0]
@@ -179,7 +184,7 @@ class OwnerDB(DBBase):
 
     def RetriveOwner(self, ownerID):
         try:
-            list = DBBase.search_in_table(self, "company, contact, address FROM " + self.__tablename + " WHERE _ROWID_=?", (ownerID,))
+            list = DBBase.SearchTable(self, "company, contact, address FROM " + self.__tablename + " WHERE _ROWID_=?", (ownerID,))
             owner = list[0]
         
             if(owner[0] == ''):

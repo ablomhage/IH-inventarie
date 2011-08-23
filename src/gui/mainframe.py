@@ -61,6 +61,7 @@ ID_LISTOWNER    = wx.NewId()
 ID_LISTLOANER   = wx.NewId()
 ID_LISTTYPE     = wx.NewId()
 ID_LISTSTORAGE  = wx.NewId()
+ID_SEARCH       = wx.NewId()
 
 class MainFrame(wx.Frame):
     def __init__(self, parent, ID, title):
@@ -74,7 +75,8 @@ class MainFrame(wx.Frame):
         filemenu = wx.Menu()
 #        filemenu.AppendMenu(wx.ID_ANY, "&Lägg till", addmenu);
         #TODO: Add the possibility to print, change the text when that is done.
-        filemenu.Append(wx.ID_ANY, "Skriv ut", u"Utskriftsmöjligheter, ej implementerad.")
+        filemenu.Append(wx.ID_PRINT, "Skriv ut", u"Utskriftsmöjligheter, ej implementerad.")
+        filemenu.Append(ID_SEARCH, u"Sök", u"Sök efter objekt, ägare och så vidare.")
         filemenu.AppendSeparator()
         filemenu.Append(wx.ID_EXIT, "Avslu&ta", "Avslutar programmet")
 
@@ -114,6 +116,7 @@ class MainFrame(wx.Frame):
 
         wx.EVT_MENU(self, ID_ABOUT, self.OnAbout)
         wx.EVT_MENU(self, wx.ID_EXIT,  self.TimeToQuit)
+        wx.EVT_MENU(self, ID_SEARCH, self.OnSearch)
         wx.EVT_MENU(self, ID_ADDOBJECT, self.OnAddObject)
         wx.EVT_MENU(self, ID_ADDOWNER, self.OnAddOwner)
         wx.EVT_MENU(self, ID_ADDLOANER, self.OnAddLoaner)
@@ -250,6 +253,8 @@ class MainFrame(wx.Frame):
             self.Freeze()
             self.book.AddPage(storagelist.StorageList(wx.Panel(self.book)), caption, True)
             self.Thaw()
+
+    def OnSearch(self, event):
         pass
 
 #    def create_page(self, caption):
