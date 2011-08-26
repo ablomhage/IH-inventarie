@@ -44,6 +44,8 @@ class MainSearchUI(wx.Dialog):
         
         panelMain = wx.Panel( self )
 
+        
+
         grid = wx.GridBagSizer( 6, 9 )
         
         panelFirst = wx.Panel(panelMain)
