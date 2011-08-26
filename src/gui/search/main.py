@@ -26,15 +26,33 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #-------------------------------------------------------------------------------
 '''
-Created on 23 aug 2011
+Created on 26 aug 2011
 
 @author: Andreas Blomhage <a.blomhage@gmail.com>
 '''
 
-import dbhandler
+import wx
 
-def Search():
-    pass
+class MainSearchUI(wx.Dialog):
+    def __init__(self, parent, id, title):
+        wx.Dialog.__init__(self, parent, id, title, size=(500,300))
+        self.__InitUI()
+        self.Centre()
+        self.Show()
+        
+    def __InitUI(self):
+        
+        panelMain = wx.Panel( self )
 
-def Search
-
+        grid = wx.GridBagSizer( 6, 9 )
+        
+        panelFirst = wx.Panel(panelMain)
+        self.cbType = wx.ComboBox(panelFirst, -1, choices=[], style=wx.CB_READONLY, size=(150,-1))
+        self.tcMeasurement  = wx.TextCtrl(panelFirst, wx.ID_ANY, size=(150, -1))
+        self.PopulateType()
+        
+        grid.Add(textType, pos=(0,2))
+        grid.Add(self.cbType, pos=(0,3))
+  
+    def __PopulateCB(self, combobox):
+        combobox.AppendItems(["","Objekt","Typ"])
