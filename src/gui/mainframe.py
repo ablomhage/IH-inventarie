@@ -48,6 +48,7 @@ import gui.loaners.add as loanersadd
 import gui.types.list as typelist
 import gui.storage.add as storageadd
 import gui.storage.list as storagelist
+import gui.search.main as searchui
 
 ID_EXIT         = wx.NewId()
 ID_ADDOBJECT    = wx.NewId()
@@ -255,7 +256,11 @@ class MainFrame(wx.Frame):
             self.Thaw()
 
     def OnSearch(self, event):
-        pass
+        print("Search")
+#        dlg = storageadd.AddStorageDialog(self, -1, u"Lägg till förvaringsplats")
+        dlg = searchui.MainSearchUI(self)
+        
+        
 
 #    def create_page(self, caption):
 #        panel = wx.Panel(self.book)
