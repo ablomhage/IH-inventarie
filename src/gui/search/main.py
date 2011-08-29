@@ -294,6 +294,7 @@ class MainSearchUI ( wx.Dialog ):
         
         self.Bind(wx.EVT_BUTTON, self.OnSearch, id=ID_SEARCH)
         self.Bind(wx.EVT_BUTTON, self.OnQuit, id=wx.ID_CLOSE)
+        self.rbSearchOptions.Bind(wx.EVT_RADIOBOX, self.OnChange)
         
         sizerButtons.Add( bSizer8, 0, wx.EXPAND, 5 )
         
@@ -313,9 +314,43 @@ class MainSearchUI ( wx.Dialog ):
     def __del__( self ):
         pass
     
+    def HidePanel(self, panel):
+        if panel.IsShown():
+            panel.Hide()
+            
+    def ShowPanel(self, panel):
+        if not panel.IsShown():
+            panel.Show()
+    
+    def OnChange(self, event):
+        item = event.GetSelection()
+        
+        if item == 1:
+            self.HidePanel(self.panelObjects)
+            self.HidePanel(self.panelLoaners)
+            self.ShowPanel(self.panelOwners)
+        elif item == 2:
+            self.HidePanel(self.panelObjects)
+            self.HidePanel(self.panelOwners)
+            self.ShowPanel(self.panelLoaners)
+        else:
+            self.HidePanel(self.panelLoaners)
+            self.HidePanel(self.panelOwners)
+            self.ShowPanel(self.panelObjects)
+            
+    
     def OnQuit( self, event ):
         self.Close()
         
     def OnSearch(self, event):
-        pass
+        selection = self.rbSearchOptions.GetSelection()
+        
+        if selection == 1:
+            pass
+        elif selection == 2:
+            pass
+        else:
+            owner = self.tcObjectOwner.GetValue()
+            
+            print owner
 

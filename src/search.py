@@ -33,8 +33,16 @@ Created on 23 aug 2011
 
 import dbhandler
 
-def Search():
+def Search(self):
     pass
 
-def Search
+def SearchObject(self):
+    pass
+
+def SearchOwner(self):
+    pass
+
+def SearchLoaner(self):
+    pass
+
 
