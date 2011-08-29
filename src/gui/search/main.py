@@ -31,6 +31,8 @@ Created on 26 aug 2011
 @author: Andreas Blomhage <a.blomhage@gmail.com>
 '''
 import wx
+import dbhandler
+import search
 
 ID_SEARCH       = wx.NewId()
 
@@ -48,6 +50,10 @@ class MainSearchUI ( wx.Dialog ):
         sizerPanelMain1 = wx.BoxSizer( wx.VERTICAL )
         
         sizerContent = wx.BoxSizer( wx.VERTICAL )
+        
+        #=======================================================================
+        # Objects panel
+        #=======================================================================
         
         self.panelObjects = wx.Panel( self.panelMain, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
         bSizer10 = wx.BoxSizer( wx.VERTICAL )
@@ -91,21 +97,21 @@ class MainSearchUI ( wx.Dialog ):
         
         sbSizer1 = wx.StaticBoxSizer( wx.StaticBox( self.panelObjects, wx.ID_ANY, u"Tillgänglighet" ), wx.VERTICAL )
         
-        self.m_checkBox1 = wx.CheckBox( self.panelObjects, wx.ID_ANY, u"Till salu", wx.DefaultPosition, wx.DefaultSize, 0 )
-        sbSizer1.Add( self.m_checkBox1, 0, wx.ALL, 5 )
+        self.chkbForSale = wx.CheckBox( self.panelObjects, wx.ID_ANY, u"Till salu", wx.DefaultPosition, wx.DefaultSize, 0 )
+        sbSizer1.Add( self.chkbForSale, 0, wx.ALL, 5 )
         
-        self.m_checkBox2 = wx.CheckBox( self.panelObjects, wx.ID_ANY, u"Uthyres", wx.DefaultPosition, wx.DefaultSize, 0 )
-        sbSizer1.Add( self.m_checkBox2, 0, wx.ALL, 5 )
+        self.chkbRent = wx.CheckBox( self.panelObjects, wx.ID_ANY, u"Uthyres", wx.DefaultPosition, wx.DefaultSize, 0 )
+        sbSizer1.Add( self.chkbRent, 0, wx.ALL, 5 )
         
         fgSizer4.Add( sbSizer1, 1, wx.EXPAND, 5 )
         
         sbSizer2 = wx.StaticBoxSizer( wx.StaticBox( self.panelObjects, wx.ID_ANY, u"Diverse" ), wx.VERTICAL )
         
-        self.m_checkBox3 = wx.CheckBox( self.panelObjects, wx.ID_ANY, u"Utlånad", wx.DefaultPosition, wx.DefaultSize, 0 )
-        sbSizer2.Add( self.m_checkBox3, 0, wx.ALL, 5 )
+        self.chkbOut = wx.CheckBox( self.panelObjects, wx.ID_ANY, u"Utlånad/uthyrd", wx.DefaultPosition, wx.DefaultSize, 0 )
+        sbSizer2.Add( self.chkbOut, 0, wx.ALL, 5 )
         
-        self.m_checkBox4 = wx.CheckBox( self.panelObjects, wx.ID_ANY, u"Behov av reparation", wx.DefaultPosition, wx.DefaultSize, 0 )
-        sbSizer2.Add( self.m_checkBox4, 0, wx.ALL, 5 )
+        self.chkbRepairs = wx.CheckBox( self.panelObjects, wx.ID_ANY, u"Behov av reparation", wx.DefaultPosition, wx.DefaultSize, 0 )
+        sbSizer2.Add( self.chkbRepairs, 0, wx.ALL, 5 )
         
         fgSizer4.Add( sbSizer2, 1, wx.EXPAND, 5 )
         
@@ -119,10 +125,11 @@ class MainSearchUI ( wx.Dialog ):
         self.textTypes.Wrap( -1 )
         fgSizer5.Add( self.textTypes, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
         
-        m_choice2Choices = []
-        self.m_choice2 = wx.Choice( self.panelObjects, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, m_choice2Choices, 0 )
-        self.m_choice2.SetSelection( 0 )
-        fgSizer5.Add( self.m_choice2, 0, wx.ALL, 5 )
+        cbTypesChoices = [""]
+        cbTypesChoices.extend(dbhandler.ObjectTypesDB().RetriveTypesSorted())
+        self.cbTypes = wx.Choice( self.panelObjects, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, cbTypesChoices, 0 )
+        self.cbTypes.SetSelection( -1 )
+        fgSizer5.Add( self.cbTypes, 0, wx.ALL, 5 )
         
         bSizer10.Add( fgSizer5, 0, wx.EXPAND|wx.ALL, 5 )
         
@@ -130,6 +137,10 @@ class MainSearchUI ( wx.Dialog ):
         self.panelObjects.Layout()
         bSizer10.Fit( self.panelObjects )
         sizerContent.Add( self.panelObjects, 0, wx.EXPAND|wx.ALL, 5 )
+        
+        #=======================================================================
+        # Owners panel
+        #=======================================================================
         
         self.panelOwners = wx.Panel( self.panelMain, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
         self.panelOwners.Hide()
@@ -351,6 +362,14 @@ class MainSearchUI ( wx.Dialog ):
             pass
         else:
             owner = self.tcObjectOwner.GetValue()
+            storage = self.tcStorage.GetValue()
+            minprice = self.tcPriceMin.GetValue()
+            maxprice = self.tcPriceMax.GetValue()
+            forsale = self.chkbForSale.GetValue()
+            forrent = self.chkbRent.GetValue()
+            rented = self.chkbOut.GetValue()
+            repairs = self.chkbRepairs.GetValue()
+            type = self.cbTypes.GetSelection()
             
-            print owner
+            search.SearchObject((owner, storage, minprice, maxprice, forsale, forrent, rented, repairs, type))
 

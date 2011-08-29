@@ -25,24 +25,45 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #-------------------------------------------------------------------------------
+# -*- coding: UTF-8 -*-
 '''
 Created on 23 aug 2011
 
 @author: Andreas Blomhage <a.blomhage@gmail.com>
 '''
 
+import gui.templates.list as listtmpl
+import gui.objects.info as objectinfo
 import dbhandler
 
-def Search(self):
-    pass
+class ObjectList(listtmpl.ListTmpl):
+    def __init__(self, parent, data):
+        listtmpl.ListTmpl.__init__(self, parent)
+        self.data = data
 
-def SearchObject(self, searchcriteria):
-    list = dbhandler.ObjectsDB().Search(column, criteria)
+    def FetchData(self):
+        try:
+            self.SetColumns([u"ID", u"Benämning", u"Typ", u"Ägare", u"Förvaringsplats"])
+            self.SetColumnWidth([50, -1, 100, 100, 100]) 
+            self.SetItems(dict(enumerate(dbhandler.ObjectsDB().RetriveSpecificObjectData("objectid, description, type, owner, storage"))))
+        except:
+            self.SetItems({ })
+            print("Error retriving object data from database")
+            
+    def PopulateList(self):
+        self.DefineListHeader()
+        items = self.GetItems().items()
+        for key, data in items:
+            owner = dbhandler.OwnerDB().RetriveOwner(data[3])
+#            data = data[:3] + (owner,data[4:],)
+            tmpdata = list(data)
+            tmpdata[3] = owner
+            data = tuple(tmpdata)
+            self.AppendListItem(key, data)
 
-def SearchOwner(self):
-    pass
+        self.currentItem = 0
 
-def SearchLoaner(self):
-    pass
-
+    def OnDoubleClick(self, event):
+        dlg = objectinfo.ObjectInfo(self, -1, "Information", self.listCtrl.GetItemText(self.currentItem))
+        event.Skip()
 

@@ -142,7 +142,8 @@ class ObjectsDB(DBBase):
         return list 
     
     def Search(self, column, criteria):
-        sql = "* from objects where " + column + " like ?"
+        #TODO: Figure out a good way to complete this method
+        sql = "objectid, description, type, owner, storage from objects where " + column + " like ?"
         items = DBBase.SearchTable(self, sql, (criteria,))
     
 # End of class ObjectsDB
