@@ -54,7 +54,7 @@ class ObjectAdd(objecttemplate.TemplateObject):
             measurement = self.tcMeasurement.GetValue()
             rent = self.tcPrice.GetValue()
             repairs = self.tcRepairs.GetValue()
-            storage = self.tcStorage.GetValue()
+            storage = self.cbStorage.GetSelection()
     
             nationality = self.cbNationality.GetValue()
             availability = self.cbAvailability.GetSelection()
@@ -70,8 +70,8 @@ class ObjectAdd(objecttemplate.TemplateObject):
                 self.tcPrice.Clear()
                 self.tcPrice.Disable()
                 self.tcRepairs.Clear()
-                self.tcStorage.Clear()
 
+                self.cbStorage.SetSelection(-1)
                 self.cbAvailability.SetSelection(-1)
                 self.cbOwner.SetSelection(-1)
                 self.cbNationality.SetSelection(-1)

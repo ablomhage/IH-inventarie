@@ -36,11 +36,32 @@ import dbhandler
 def Search(self):
     pass
 
-def SearchObject(self, searchcriteria):
-    list = dbhandler.ObjectsDB().Search(column, criteria)
-
-def SearchOwner(self):
+def __SearchOwnerName(self, criteria):
+    owners = []
+    if(criteria):
+        criteria = '%' + criteria + '%'
+        owners = dbhandler.OwnerDB().Search(criteria)
+        
+    return owners
+    
+def __SearchStorage(self, criteria):
+    storage = []
+    if(criteria):
+        pass
+    
+def SearchOwner(self, criteria):
     pass
+
+#(owner, storage, minprice, maxprice, forsale, forrent, rented, repairs, type)
+def SearchObject(self, searchcriteria):
+    print(searchcriteria)
+    owners = __SearchOwnerName(self, searchcriteria[0]) 
+    if(len(owners) > 0): #We managed to find a few owners that matched the criteria
+        pass
+    
+    storage = __SearchStorage(self, searchcriteria[1])
+    
+#        list = dbhandler.ObjectsDB().Search(column, criteria)
 
 def SearchLoaner(self):
     pass

@@ -371,5 +371,6 @@ class MainSearchUI ( wx.Dialog ):
             repairs = self.chkbRepairs.GetValue()
             type = self.cbTypes.GetSelection()
             
-            search.SearchObject((owner, storage, minprice, maxprice, forsale, forrent, rented, repairs, type))
+            search.SearchObject(self, (owner, storage, minprice, maxprice, forsale, forrent, rented, repairs, type))
+            
 

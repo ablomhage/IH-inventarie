@@ -150,11 +150,11 @@ class ObjectsDB(DBBase):
 
 #TODO: Add classdocumentation
 class OwnerDB(DBBase):
-    __tablename = ""
+    __tableName = ""
     def __init__(self):
         DBBase.__init__(self)
-        self.__tablename = "owners"
-        DBBase.CreateTable(self, self.__tablename + "(company varchar, " +
+        self.__tableName = "owners"
+        DBBase.CreateTable(self, self.__tableName + "(company varchar, " +
                 "contact varchar, address varchar, zip integer, " +
                 "town varchar, phone varchar, mobile varchar, email varchar)")
 
@@ -169,7 +169,7 @@ class OwnerDB(DBBase):
         ownerlist = owner.split(', ')
         try:
             list = DBBase.SearchTable(self, "rowid from " +
-                self.__tablename + " where contact=? and address=?",(ownerlist[0],ownerlist[1],))
+                self.__tableName + " where contact=? and address=?",(ownerlist[0],ownerlist[1],))
 
             try:
                 return list[0][0]
@@ -177,7 +177,7 @@ class OwnerDB(DBBase):
                 return None
         except:
             list = DBBase.SearchTable(self, "rowid from " +
-                self.__tablename + " where company=?",(ownerlist[0],))
+                self.__tableName + " where company=?",(ownerlist[0],))
             try:
                 return list[0][0]
             except:
@@ -185,10 +185,10 @@ class OwnerDB(DBBase):
 
     def RetriveOwner(self, ownerID):
         try:
-            list = DBBase.SearchTable(self, "company, contact, address FROM " + self.__tablename + " WHERE _ROWID_=?", (ownerID,))
+            list = DBBase.SearchTable(self, "company, contact, address FROM " + self.__tableName + " WHERE _ROWID_=?", (ownerID,))
             owner = list[0]
         
-            if(owner[0] == ''):
+            if(owner[0] == ''): #if(not owner[0]) should be better
                 ownerRet = owner[1] + ', ' + owner[2]
             else:
                 ownerRet = owner[0]
@@ -199,12 +199,12 @@ class OwnerDB(DBBase):
 
 
     def RetriveSpecificOwnerData(self, pattern):
-        sql = pattern + " FROM " + self.__tablename
+        sql = pattern + " FROM " + self.__tableName
         list = DBBase.select_from_table(self, sql)
         return list
 
     def RetriveListOfOwners(self):
-        list = DBBase.select_from_table(self, "company, contact, address from " + self.__tablename)
+        list = DBBase.select_from_table(self, "company, contact, address from " + self.__tableName)
         returnlist = []
         for i in list:
             if(i[0] == ''):
@@ -217,18 +217,23 @@ class OwnerDB(DBBase):
     
     #TODO: Add comments
     def RetriveAllOwners(self):
-        list = DBBase.select_from_table(self, "* from " + self.__tablename)
+        list = DBBase.select_from_table(self, "* from " + self.__tableName)
        
         return list 
+    
+    def Search(self, criteria):
+        list = DBBase.SearchTable(self, "rowid from " + self.__tableName + " where company like ? or contact like ?", (criteria,criteria))
+        return list
+    
 # End of class LoanerDB
 
 #TODO: Add classdocumentation
 class LoanerDB(DBBase):
-    __tablename = ""
+    __tableName = ""
     
     def __init__(self):
         DBBase.__init__(self)
-        self.__tablename = "loaners"
+        self.__tableName = "loaners"
         DBBase.CreateTable(self, "loaners(company varchar, " +
                 "contact varchar, address varchar, zip integer, " +
                 "town varchar, phone varchar, mobile varchar, email varchar)")
@@ -238,29 +243,29 @@ class LoanerDB(DBBase):
         DBBase.insert_into_table(self, sql, data)
         
     def RetriveSpecificLoanerData(self, pattern):
-        sql = pattern + " FROM " + self.__tablename
+        sql = pattern + " FROM " + self.__tableName
         list = DBBase.select_from_table(self, sql)
         return list
 # End of class LoanerDB
 
 #TODO: Add classdocumentation
 class ObjectTypesDB(DBBase):
-    __tablename = ""
+    __tableName = ""
     def __init__(self):
         DBBase.__init__(self)
-        self.__tablename = "objecttypes"
-        DBBase.CreateTable(self, self.__tablename + "(objecttype primary key)")
+        self.__tableName = "objecttypes"
+        DBBase.CreateTable(self, self.__tableName + "(objecttype primary key)")
 
     def insert_into_table(self, data):
-        sql = self.__tablename + " values (?)"
+        sql = self.__tableName + " values (?)"
         DBBase.insert_into_table(self, sql, (data,))
 
     def RetriveAllTypes(self):
-        list = DBBase.select_from_table(self, "objecttype from " + self.__tablename)
+        list = DBBase.select_from_table(self, "objecttype from " + self.__tableName)
         return list
 
     def RetriveTypesSorted(self):
-        items = DBBase.select_from_table(self, "objecttype from " + self.__tablename)
+        items = DBBase.select_from_table(self, "objecttype from " + self.__tableName)
         tmp = [u', '.join(map(str, item)) for item in items]
         items = sorted(tmp, key=unicode.lower)
         return items
@@ -293,7 +298,7 @@ class StorageDB(DBBase):
     def __init__(self):
         DBBase.__init__(self)
         self.__tableName = "storage"
-#        DBBase.CreateTable(self, self.__tablename + "()")
+#        DBBase.CreateTable(self, self.__tableName + "()")
 
     def CreateTable(self):
         DBBase.CreateTable(self, self.__tableName + "(location text not null, room text not null)")
@@ -305,12 +310,45 @@ class StorageDB(DBBase):
         except sqlite3.Error, error:
             print error
 
+#    def RetriveStorageList(self):
+#        list = self.RetriveAllStorage()
+#        tmp = [u', '.join(map(str, item)) for item in list]
+#        return tmp
+    
     def RetriveStorageList(self):
         list = self.RetriveAllStorage()
         tmp = [u', '.join(map(str, item)) for item in list]
-        return tmp
+        items = sorted(tmp, key=unicode.lower)
+        return items
 
     def RetriveAllStorage(self):
         list = DBBase.select_from_table(self, "location, room from " + self.__tableName)
         return list
+
+    def RetriveStorage(self, storageID):
+        try:
+            list = DBBase.SearchTable(self, "location, room FROM " + self.__tableName + " WHERE _ROWID_=?", (storageID,))
+            retstorage = list[0][0] + ", " + list[0][1]
+            return retstorage
+        except:
+            return "Okänd"
+
+    def Search(self, criteria):
+        storage = criteria.split(', ')
+        try:
+            list = DBBase.SearchTable(self, "rowid from " +
+                self.__tableName + " where contact=? and address=?",(storage[0],storage[1],))
+
+            try:
+                return list[0][0]
+            except:
+                return None
+        except:
+            list = DBBase.SearchTable(self, "rowid from " +
+                self.__tableName + " where company=?", (storage[0],))
+            try:
+                return list[0][0]
+            except:
+                return None
+        list = DBBase.SearchTable(self, "location, room from " + self.__tableName + " where location like ? or room like ? ", criteria)
 

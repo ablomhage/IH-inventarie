@@ -45,11 +45,11 @@ class ObjectEdit(objecttemplate.TemplateObject):
         self.__objectID = object[0]
         self.tcID.SetValue("" + object[0])
         self.tcMeasurement.SetValue(object[2])
-        self.tcStorage.SetValue(object[5])
         self.tcPrice.SetValue(str(object[8]))
         self.tcDescription.SetValue(object[3])
         self.tcRepairs.SetValue(object[7])
 #        self.cbAvailability.SetStringSelection()
+        self.cbStorage.SetStringSelection(object[5])
         self.cbNationality.SetStringSelection(object[9])
         self.cbOwner.SetStringSelection(object[4])
         self.cbType.SetStringSelection(object[1])
@@ -65,7 +65,7 @@ class ObjectEdit(objecttemplate.TemplateObject):
             measurement = self.tcMeasurement.GetValue()
             rent = self.tcPrice.GetValue()
             repairs = self.tcRepairs.GetValue()
-            storage = self.tcStorage.GetValue()
+            storage = self.cbStorage.GetSelection()
     
             nationality = self.cbNationality.GetValue()
     

@@ -54,9 +54,11 @@ class ObjectList(listtmpl.ListTmpl):
         items = self.GetItems().items()
         for key, data in items:
             owner = dbhandler.OwnerDB().RetriveOwner(data[3])
+            storage = dbhandler.StorageDB().RetriveStorage(data[4])
 #            data = data[:3] + (owner,data[4:],)
             tmpdata = list(data)
             tmpdata[3] = owner
+            tmpdata[4] = storage
             data = tuple(tmpdata)
             self.AppendListItem(key, data)
 
